@@ -1,27 +1,48 @@
-import { ListToolsRequestSchema, CallToolRequestSchema, type CallToolRequest, type Tool } from "@modelcontextprotocol/sdk/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { MOD_LIST_TOOL, handleModListTool } from './modList.js';
+import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolRequest, type Tool, type ServerResult } from "@modelcontextprotocol/sdk/types.js";
 
-export * from './modList.js';
+import { tool as setModDirectoryTool, type SetModDirectoryParams } from './set_mod_directory.js';
+import { tool as getModDirectoryTool } from './get_mod_directory.js';
+import { tool as resetModDirectoryTool } from './reset_mod_directory.js';
+import { tool as modListTool, handler as modListHandler } from './mod_list.js';
 
+// Export all tools for server capabilities
+export const tools = {
+  set_mod_directory: setModDirectoryTool,
+  get_mod_directory: getModDirectoryTool,
+  reset_mod_directory: resetModDirectoryTool,
+  mod_list: modListTool,
+} satisfies Record<string, Tool>;
+
+// Initialize tool handlers
 export function setupTools(server: Server) {
   // Register tool list handler
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
-      tools: [
-        MOD_LIST_TOOL,
-      ] as Tool[],
+      tools: Object.values(tools),
     };
   });
 
-  // Register unified tool call handler
+  // Register tool handlers
   server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
     const { name, arguments: args } = request.params;
 
     switch (name) {
-      case MOD_LIST_TOOL.name:
-        return handleModListTool();
-
+      case 'set_mod_directory': {
+        if (!args || typeof args !== 'object' || !('directory' in args) || typeof args.directory !== 'string') {
+          throw new Error('Invalid arguments for set_mod_directory - requires {directory: string}');
+        }
+        const params: SetModDirectoryParams = { directory: args.directory };
+        return await (setModDirectoryTool.handler as (params: SetModDirectoryParams) => Promise<ServerResult>)(params);
+      }
+      case 'get_mod_directory': {
+        return await (getModDirectoryTool.handler as (params: Record<string, never>) => Promise<ServerResult>)({});
+      }
+      case 'reset_mod_directory': {
+        return await (resetModDirectoryTool.handler as (params: Record<string, never>) => Promise<ServerResult>)({});
+      }
+      case 'mod_list':
+        return await modListHandler();
       default:
         throw new Error(`Unknown tool: ${name}`);
     }

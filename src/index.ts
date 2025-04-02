@@ -4,9 +4,7 @@ import { ConfigurationService } from "./services/config.js";
 import { Logger } from "./services/logger.js";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { CallToolRequestSchema, type CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
-import { setModDirectoryTool, getModDirectoryTool, resetModDirectoryTool } from "./tools/config.js";
-import { MOD_LIST_TOOL, handleModListTool } from "./tools/modList.js";
+import { setupTools, tools } from "./tools/index.js";
 import { BEST_PRACTICES_PROMPT } from "./prompts/bestPractices.js";
 import { setupPrompts } from "./prompts/index.js";
 import { setupResourceHandlers } from "./resources/index.js";
@@ -28,12 +26,7 @@ const server = new Server(
   },
   {
     capabilities: {
-      tools: {
-        set_mod_directory: setModDirectoryTool,
-        get_mod_directory: getModDirectoryTool,
-        reset_mod_directory: resetModDirectoryTool,
-        mod_list: MOD_LIST_TOOL
-      },
+      tools,
       prompts: {
         best_practices: BEST_PRACTICES_PROMPT,
       },
@@ -43,30 +36,9 @@ const server = new Server(
 );
 
 // Set up handlers
+setupTools(server);
 setupPrompts(server);
 setupResourceHandlers(server);
-
-// Register tool handlers
-server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
-  const { name, arguments: args } = request.params;
-
-  switch (name) {
-    case setModDirectoryTool.name: {
-      const typedArgs = args as { directory: string };
-      return await setModDirectoryTool.handler({ directory: typedArgs.directory });
-    }
-    case getModDirectoryTool.name: {
-      return await getModDirectoryTool.handler({});
-    }
-    case resetModDirectoryTool.name: {
-      return await resetModDirectoryTool.handler({});
-    }
-    case MOD_LIST_TOOL.name:
-      return await handleModListTool();
-    default:
-      throw new Error(`Unknown tool: ${name}`);
-  }
-});
 
 // Start server
 async function startServer() {

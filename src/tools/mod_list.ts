@@ -1,23 +1,17 @@
-import type { Tool } from "@modelcontextprotocol/sdk/types.js";
+import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { execSync } from "node:child_process";
 import { logger } from "../services/logger.js";
 
-export const MOD_LIST_TOOL: Tool = {
-  name: "mcp_powerpipe_mod_list",
+export const tool: Tool = {
+  name: "mod_list",
   description: "List all available Powerpipe mods",
   inputSchema: {
     type: "object",
-    properties: {
-      random_string: {
-        type: "string",
-        description: "Dummy parameter for no-parameter tools",
-      },
-    },
-    required: ["random_string"],
+    properties: {},
   },
 };
 
-export async function handleModListTool(): Promise<{result: {mods: unknown[]}}> {
+export async function handler(): Promise<{result: {mods: unknown[]}}> {
   try {
     logger.info('Getting mod list from Powerpipe CLI...');
     const output = execSync('powerpipe mod list --output json', { encoding: 'utf-8' });
