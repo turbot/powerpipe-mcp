@@ -13,15 +13,18 @@ export const tool: Tool = {
     const success = config.resetModDirectory();
     
     if (success) {
+      const directory = config.getModDirectory();
       return {
-        type: "text",
-        text: `Successfully reset mod directory to default`
+        content: [{
+          type: "text",
+          text: JSON.stringify({
+            directory,
+            message: `Successfully reset mod directory to default: ${directory}`
+          }, null, 2)
+        }]
       };
     } else {
-      return {
-        type: "error",
-        text: "Failed to reset mod directory"
-      };
+      throw new Error("Failed to reset mod directory");
     }
   }
 }; 

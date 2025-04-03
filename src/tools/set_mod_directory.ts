@@ -49,8 +49,13 @@ export const tool: Tool = {
     }
 
     return {
-      type: "text",
-      text: `Successfully set mod directory to: ${resolvedDirectory}`
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          directory: resolvedDirectory,
+          message: `Successfully set mod directory to: ${resolvedDirectory}`
+        }, null, 2)
+      }]
     };
   }
 }; 

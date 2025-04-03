@@ -13,8 +13,13 @@ export const tool: Tool = {
     const directory = config.getModDirectory();
     
     return {
-      type: "text",
-      text: `Current mod directory: ${directory}`
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          directory,
+          message: `Current mod directory: ${directory}`
+        }, null, 2)
+      }]
     };
   }
 }; 
