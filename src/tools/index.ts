@@ -12,6 +12,7 @@ import { tool as detectionListTool } from './detection_list.js';
 import { tool as detectionShowTool } from './detection_show.js';
 import { tool as modListTool } from './mod_list.js';
 import { tool as queryListTool } from './query_list.js';
+import { tool as queryShowTool } from './query_show.js';
 
 // Export all tools for server capabilities
 export const tools = {
@@ -26,6 +27,7 @@ export const tools = {
   detection_show: detectionShowTool,
   mod_list: modListTool,
   query_list: queryListTool,
+  query_show: queryShowTool,
 } satisfies Record<string, Tool>;
 
 // Initialize tool handlers
