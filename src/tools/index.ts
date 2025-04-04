@@ -8,6 +8,7 @@ import { tool as benchmarkListTool } from './benchmark_list.js';
 import { tool as benchmarkShowTool } from './benchmark_show.js';
 import { tool as controlListTool } from './control_list.js';
 import { tool as controlShowTool } from './control_show.js';
+import { tool as controlRunTool } from './control_run.js';
 import { tool as detectionListTool } from './detection_list.js';
 import { tool as detectionShowTool } from './detection_show.js';
 import { tool as modListTool } from './mod_list.js';
@@ -25,6 +26,7 @@ export const tools = {
   benchmark_show: benchmarkShowTool,
   control_list: controlListTool,
   control_show: controlShowTool,
+  control_run: controlRunTool,
   detection_list: detectionListTool,
   detection_show: detectionShowTool,
   mod_list: modListTool,
