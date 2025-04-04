@@ -7,7 +7,7 @@ interface Detection {
   title: string;
   qualified_name: string;
   documentation: string;
-  tags: string[];
+  tags: Record<string, string>;
 }
 
 export const tool: Tool = {
@@ -45,7 +45,7 @@ export const tool: Tool = {
           title: detection.title || '',
           qualified_name: detection.qualified_name || '',
           documentation: detection.documentation || '',
-          tags: Array.isArray(detection.tags) ? detection.tags : []
+          tags: typeof detection.tags === 'object' && detection.tags !== null ? detection.tags : {}
         }));
 
         const result = {
