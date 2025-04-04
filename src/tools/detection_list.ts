@@ -7,6 +7,7 @@ interface Detection {
   title: string;
   qualified_name: string;
   documentation: string;
+  tags: string[];
 }
 
 export const tool: Tool = {
@@ -43,7 +44,8 @@ export const tool: Tool = {
         const detections = rawDetections.map(detection => ({
           title: detection.title || '',
           qualified_name: detection.qualified_name || '',
-          documentation: detection.documentation || ''
+          documentation: detection.documentation || '',
+          tags: Array.isArray(detection.tags) ? detection.tags : []
         }));
 
         const result = {
