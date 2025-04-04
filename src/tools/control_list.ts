@@ -16,65 +16,64 @@ export const tool: Tool = {
     type: "object",
     properties: {},
   },
-};
-
-export async function handler(): Promise<{content: [{type: string, text: string}]}> {
-  try {
-    const config = ConfigurationService.getInstance();
-    const modDirectory = config.getModDirectory();
-    const cmd = `powerpipe control list --output json --mod-location "${modDirectory}"`;
-
-    const env = {
-      ...process.env,
-      POWERPIPE_MOD_DIRECTORY: modDirectory
-    };
-
-    const output = execSync(cmd, { 
-      encoding: 'utf-8',
-      env
-    });
-    
+  handler: async () => {
     try {
-      const rawControls = JSON.parse(output);
-      if (!Array.isArray(rawControls)) {
-        throw new Error('Expected array output from Powerpipe CLI');
-      }
+      const config = ConfigurationService.getInstance();
+      const modDirectory = config.getModDirectory();
+      const cmd = `powerpipe control list --output json --mod-location "${modDirectory}"`;
 
-      // Filter to only include specified fields
-      const controls = rawControls.map(control => ({
-        title: control.title || '',
-        qualified_name: control.qualified_name || '',
-        documentation: control.documentation || ''
-      }));
+      const env = {
+        ...process.env,
+        POWERPIPE_MOD_DIRECTORY: modDirectory
+      };
 
-      const result = {
-        controls,
-        debug: {
-          command: cmd
+      const output = execSync(cmd, { 
+        encoding: 'utf-8',
+        env
+      });
+      
+      try {
+        const rawControls = JSON.parse(output);
+        if (!Array.isArray(rawControls)) {
+          throw new Error('Expected array output from Powerpipe CLI');
         }
-      };
 
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify(result, null, 2)
-        }]
-      };
-    } catch (parseError) {
-      logger.error('Failed to parse Powerpipe CLI output:', parseError instanceof Error ? parseError.message : String(parseError));
-      logger.error('Powerpipe output:', output);
-      throw new Error(`Failed to parse Powerpipe CLI output: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+        // Filter to only include specified fields
+        const controls = rawControls.map(control => ({
+          title: control.title || '',
+          qualified_name: control.qualified_name || '',
+          documentation: control.documentation || ''
+        }));
+
+        const result = {
+          controls,
+          debug: {
+            command: cmd
+          }
+        };
+
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(result, null, 2)
+          }]
+        };
+      } catch (parseError) {
+        logger.error('Failed to parse Powerpipe CLI output:', parseError instanceof Error ? parseError.message : String(parseError));
+        logger.error('Powerpipe output:', output);
+        throw new Error(`Failed to parse Powerpipe CLI output: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+      }
+    } catch (error) {
+      // If it's an error from execSync, it will have stdout and stderr properties
+      if (error && typeof error === 'object' && 'stderr' in error) {
+        const execError = error as { stderr: Buffer };
+        const errorMessage = execError.stderr.toString();
+        logger.error('Failed to run Powerpipe CLI:', errorMessage);
+        throw new Error(`Failed to run Powerpipe CLI: ${errorMessage}`);
+      }
+      
+      logger.error('Failed to run Powerpipe CLI:', error instanceof Error ? error.message : String(error));
+      throw new Error(`Failed to run Powerpipe CLI: ${error instanceof Error ? error.message : String(error)}`);
     }
-  } catch (error) {
-    // If it's an error from execSync, it will have stdout and stderr properties
-    if (error && typeof error === 'object' && 'stderr' in error) {
-      const execError = error as { stderr: Buffer };
-      const errorMessage = execError.stderr.toString();
-      logger.error('Failed to run Powerpipe CLI:', errorMessage);
-      throw new Error(`Failed to run Powerpipe CLI: ${errorMessage}`);
-    }
-    
-    logger.error('Failed to run Powerpipe CLI:', error instanceof Error ? error.message : String(error));
-    throw new Error(`Failed to run Powerpipe CLI: ${error instanceof Error ? error.message : String(error)}`);
   }
-} 
+}; 

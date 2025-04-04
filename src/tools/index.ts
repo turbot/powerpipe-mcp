@@ -4,9 +4,9 @@ import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolRequest, ty
 import { tool as setModDirectoryTool } from './set_mod_directory.js';
 import { tool as getModDirectoryTool } from './get_mod_directory.js';
 import { tool as resetModDirectoryTool } from './reset_mod_directory.js';
-import { tool as benchmarkListTool, handler as benchmarkListHandler } from './benchmark_list.js';
+import { tool as benchmarkListTool } from './benchmark_list.js';
 import { tool as benchmarkShowTool } from './benchmark_show.js';
-import { tool as controlListTool, handler as controlListHandler } from './control_list.js';
+import { tool as controlListTool } from './control_list.js';
 
 // Export all tools for server capabilities
 export const tools = {
