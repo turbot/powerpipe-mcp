@@ -7,7 +7,7 @@ interface Control {
   title: string;
   qualified_name: string;
   documentation: string;
-  tags: string[];
+  tags: Record<string, string>;
 }
 
 export const tool: Tool = {
@@ -45,7 +45,7 @@ export const tool: Tool = {
           title: control.title || '',
           qualified_name: control.qualified_name || '',
           documentation: control.documentation || '',
-          tags: Array.isArray(control.tags) ? control.tags : []
+          tags: typeof control.tags === 'object' && control.tags !== null ? control.tags : {}
         }));
 
         const result = {
