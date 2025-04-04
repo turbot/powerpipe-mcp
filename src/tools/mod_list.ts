@@ -7,6 +7,7 @@ interface Mod {
   title: string;
   qualified_name: string;
   documentation: string;
+  tags: string[];
 }
 
 export const tool: Tool = {
@@ -43,7 +44,8 @@ export const tool: Tool = {
         const mods = rawMods.map(mod => ({
           title: mod.title || '',
           qualified_name: mod.qualified_name || '',
-          documentation: mod.documentation || ''
+          documentation: mod.documentation || '',
+          tags: Array.isArray(mod.tags) ? mod.tags : []
         }));
 
         const result = {

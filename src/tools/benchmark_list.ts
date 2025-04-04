@@ -7,7 +7,7 @@ interface Benchmark {
   title: string;
   qualified_name: string;
   documentation: string;
-  tags: string[];
+  tags: Record<string, string>;
 }
 
 export const tool: Tool = {
@@ -45,7 +45,7 @@ export const tool: Tool = {
           title: benchmark.title || '',
           qualified_name: benchmark.qualified_name || '',
           documentation: benchmark.documentation || '',
-          tags: Array.isArray(benchmark.tags) ? benchmark.tags : []
+          tags: typeof benchmark.tags === 'object' && benchmark.tags !== null ? benchmark.tags : {}
         }));
 
         const result = {
