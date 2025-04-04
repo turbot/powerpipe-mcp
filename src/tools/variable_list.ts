@@ -33,8 +33,7 @@ export const tool: Tool = {
         const result = {
           variables,
           debug: {
-            command: cmd,
-            rawOutput: output
+            command: cmd
           }
         };
 
