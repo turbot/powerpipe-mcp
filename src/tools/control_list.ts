@@ -15,6 +15,7 @@ export const tool: Tool = {
   inputSchema: {
     type: "object",
     properties: {},
+    additionalProperties: false
   },
   handler: async () => {
     try {
