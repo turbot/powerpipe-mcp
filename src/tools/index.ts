@@ -11,6 +11,7 @@ import { tool as controlShowTool } from './control_show.js';
 import { tool as controlRunTool } from './control_run.js';
 import { tool as detectionListTool } from './detection_list.js';
 import { tool as detectionShowTool } from './detection_show.js';
+import { tool as detectionRunTool } from './detection_run.js';
 import { tool as modListTool } from './mod_list.js';
 import { tool as queryListTool } from './query_list.js';
 import { tool as queryShowTool } from './query_show.js';
@@ -29,6 +30,7 @@ export const tools = {
   control_run: controlRunTool,
   detection_list: detectionListTool,
   detection_show: detectionShowTool,
+  detection_run: detectionRunTool,
   mod_list: modListTool,
   query_list: queryListTool,
   query_show: queryShowTool,
