@@ -7,6 +7,7 @@ interface Control {
   title: string;
   qualified_name: string;
   documentation: string;
+  tags: string[];
 }
 
 export const tool: Tool = {
@@ -43,7 +44,8 @@ export const tool: Tool = {
         const controls = rawControls.map(control => ({
           title: control.title || '',
           qualified_name: control.qualified_name || '',
-          documentation: control.documentation || ''
+          documentation: control.documentation || '',
+          tags: Array.isArray(control.tags) ? control.tags : []
         }));
 
         const result = {
