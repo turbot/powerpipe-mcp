@@ -7,6 +7,7 @@ interface Benchmark {
   title: string;
   qualified_name: string;
   documentation: string;
+  tags: string[];
 }
 
 export const tool: Tool = {
@@ -43,7 +44,8 @@ export const tool: Tool = {
         const benchmarks = rawBenchmarks.map(benchmark => ({
           title: benchmark.title || '',
           qualified_name: benchmark.qualified_name || '',
-          documentation: benchmark.documentation || ''
+          documentation: benchmark.documentation || '',
+          tags: Array.isArray(benchmark.tags) ? benchmark.tags : []
         }));
 
         const result = {
