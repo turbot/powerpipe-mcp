@@ -18,6 +18,13 @@ function resolvePath(path: string): string {
   return resolve(path);
 }
 
+function validateParams(args: unknown): SetModDirectoryParams {
+  if (!args || typeof args !== 'object' || !('directory' in args) || typeof args.directory !== 'string') {
+    throw new Error('Invalid arguments for set_mod_directory - requires {directory: string}');
+  }
+  return { directory: args.directory };
+}
+
 export const tool: Tool = {
   name: "set_mod_directory",
   description: "Set the working directory for Powerpipe mods",
@@ -31,8 +38,9 @@ export const tool: Tool = {
     },
     required: ["directory"]
   },
-  handler: async ({ directory }: SetModDirectoryParams) => {
-    const resolvedDirectory = resolvePath(directory);
+  handler: async (args: unknown) => {
+    const params = validateParams(args);
+    const resolvedDirectory = resolvePath(params.directory);
 
     // Validate directory exists
     if (!existsSync(resolvedDirectory)) {
