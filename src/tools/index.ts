@@ -4,14 +4,14 @@ import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolRequest, ty
 import { tool as setModDirectoryTool, type SetModDirectoryParams } from './set_mod_directory.js';
 import { tool as getModDirectoryTool } from './get_mod_directory.js';
 import { tool as resetModDirectoryTool } from './reset_mod_directory.js';
-import { tool as modListTool, handler as modListHandler } from './mod_list.js';
+import { tool as benchmarkListTool, handler as benchmarkListHandler } from './benchmark_list.js';
 
 // Export all tools for server capabilities
 export const tools = {
   set_mod_directory: setModDirectoryTool,
   get_mod_directory: getModDirectoryTool,
   reset_mod_directory: resetModDirectoryTool,
-  mod_list: modListTool,
+  benchmark_list: benchmarkListTool,
 } satisfies Record<string, Tool>;
 
 // Initialize tool handlers
@@ -41,8 +41,8 @@ export function setupTools(server: Server) {
       case 'reset_mod_directory': {
         return await (resetModDirectoryTool.handler as (params: Record<string, never>) => Promise<ServerResult>)({});
       }
-      case 'mod_list':
-        return await modListHandler();
+      case 'benchmark_list':
+        return await benchmarkListHandler();
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
