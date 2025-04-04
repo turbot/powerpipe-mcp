@@ -3,6 +3,12 @@ import { execSync } from "node:child_process";
 import { logger } from "../services/logger.js";
 import { ConfigurationService } from "../services/config.js";
 
+interface Variable {
+  title: string;
+  qualified_name: string;
+  documentation: string;
+}
+
 export const tool: Tool = {
   name: "variable_list",
   description: "List all available Powerpipe variables",
@@ -28,8 +34,18 @@ export const tool: Tool = {
       });
       
       try {
-        const variables = JSON.parse(output);
-        
+        const rawVariables = JSON.parse(output);
+        if (!Array.isArray(rawVariables)) {
+          throw new Error('Expected array output from Powerpipe CLI');
+        }
+
+        // Filter to only include specified fields
+        const variables = rawVariables.map(variable => ({
+          title: variable.title || '',
+          qualified_name: variable.qualified_name || '',
+          documentation: variable.documentation || ''
+        }));
+
         const result = {
           variables,
           debug: {
