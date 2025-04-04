@@ -13,6 +13,8 @@ import { tool as detectionShowTool } from './detection_show.js';
 import { tool as modListTool } from './mod_list.js';
 import { tool as queryListTool } from './query_list.js';
 import { tool as queryShowTool } from './query_show.js';
+import { tool as variableListTool } from './variable_list.js';
+import { tool as variableShowTool } from './variable_show.js';
 
 // Export all tools for server capabilities
 export const tools = {
@@ -28,6 +30,8 @@ export const tools = {
   mod_list: modListTool,
   query_list: queryListTool,
   query_show: queryShowTool,
+  variable_list: variableListTool,
+  variable_show: variableShowTool,
 } satisfies Record<string, Tool>;
 
 // Initialize tool handlers
