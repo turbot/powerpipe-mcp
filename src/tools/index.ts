@@ -8,6 +8,7 @@ import { tool as benchmarkListTool } from './benchmark_list.js';
 import { tool as benchmarkShowTool } from './benchmark_show.js';
 import { tool as controlListTool } from './control_list.js';
 import { tool as detectionListTool } from './detection_list.js';
+import { tool as detectionShowTool } from './detection_show.js';
 
 // Export all tools for server capabilities
 export const tools = {
@@ -18,6 +19,7 @@ export const tools = {
   benchmark_show: benchmarkShowTool,
   control_list: controlListTool,
   detection_list: detectionListTool,
+  detection_show: detectionShowTool,
 } satisfies Record<string, Tool>;
 
 // Initialize tool handlers
