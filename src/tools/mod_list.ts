@@ -7,7 +7,7 @@ interface Mod {
   title: string;
   qualified_name: string;
   documentation: string;
-  tags: string[];
+  tags: Record<string, string>;
 }
 
 export const tool: Tool = {
@@ -45,7 +45,7 @@ export const tool: Tool = {
           title: mod.title || '',
           qualified_name: mod.qualified_name || '',
           documentation: mod.documentation || '',
-          tags: Array.isArray(mod.tags) ? mod.tags : []
+          tags: typeof mod.tags === 'object' && mod.tags !== null ? mod.tags : {}
         }));
 
         const result = {
