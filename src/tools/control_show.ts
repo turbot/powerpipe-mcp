@@ -25,7 +25,8 @@ export const tool: Tool = {
         description: "The qualified name of the control to show details for"
       }
     },
-    required: ["qualified_name"]
+    required: ["qualified_name"],
+    additionalProperties: false
   },
   handler: async (args: unknown) => {
     const params = validateParams(args);
