@@ -5,6 +5,7 @@ import { tool as setModDirectoryTool, type SetModDirectoryParams } from './set_m
 import { tool as getModDirectoryTool } from './get_mod_directory.js';
 import { tool as resetModDirectoryTool } from './reset_mod_directory.js';
 import { tool as benchmarkListTool, handler as benchmarkListHandler } from './benchmark_list.js';
+import { tool as benchmarkShowTool, handler as benchmarkShowHandler, type BenchmarkShowParams } from './benchmark_show.js';
 
 // Export all tools for server capabilities
 export const tools = {
@@ -12,6 +13,7 @@ export const tools = {
   get_mod_directory: getModDirectoryTool,
   reset_mod_directory: resetModDirectoryTool,
   benchmark_list: benchmarkListTool,
+  benchmark_show: benchmarkShowTool,
 } satisfies Record<string, Tool>;
 
 // Initialize tool handlers
@@ -43,6 +45,13 @@ export function setupTools(server: Server) {
       }
       case 'benchmark_list':
         return await benchmarkListHandler();
+      case 'benchmark_show': {
+        if (!args || typeof args !== 'object' || !('qualified_name' in args) || typeof args.qualified_name !== 'string') {
+          throw new Error('Invalid arguments for benchmark_show - requires {qualified_name: string}');
+        }
+        const params: BenchmarkShowParams = { qualified_name: args.qualified_name };
+        return await benchmarkShowHandler(params);
+      }
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
