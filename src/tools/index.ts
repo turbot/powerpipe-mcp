@@ -7,6 +7,7 @@ import { tool as resetModDirectoryTool } from './reset_mod_directory.js';
 import { tool as benchmarkListTool } from './benchmark_list.js';
 import { tool as benchmarkShowTool } from './benchmark_show.js';
 import { tool as controlListTool } from './control_list.js';
+import { tool as detectionListTool } from './detection_list.js';
 
 // Export all tools for server capabilities
 export const tools = {
@@ -16,6 +17,7 @@ export const tools = {
   benchmark_list: benchmarkListTool,
   benchmark_show: benchmarkShowTool,
   control_list: controlListTool,
+  detection_list: detectionListTool,
 } satisfies Record<string, Tool>;
 
 // Initialize tool handlers
