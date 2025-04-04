@@ -6,6 +6,7 @@ import { tool as getModDirectoryTool } from './get_mod_directory.js';
 import { tool as resetModDirectoryTool } from './reset_mod_directory.js';
 import { tool as benchmarkListTool, handler as benchmarkListHandler } from './benchmark_list.js';
 import { tool as benchmarkShowTool, handler as benchmarkShowHandler, type BenchmarkShowParams } from './benchmark_show.js';
+import { tool as controlListTool, handler as controlListHandler } from './control_list.js';
 
 // Export all tools for server capabilities
 export const tools = {
@@ -14,6 +15,7 @@ export const tools = {
   reset_mod_directory: resetModDirectoryTool,
   benchmark_list: benchmarkListTool,
   benchmark_show: benchmarkShowTool,
+  control_list: controlListTool,
 } satisfies Record<string, Tool>;
 
 // Initialize tool handlers
@@ -52,6 +54,8 @@ export function setupTools(server: Server) {
         const params: BenchmarkShowParams = { qualified_name: args.qualified_name };
         return await benchmarkShowHandler(params);
       }
+      case 'control_list':
+        return await controlListHandler();
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
