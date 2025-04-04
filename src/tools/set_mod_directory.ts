@@ -36,7 +36,8 @@ export const tool: Tool = {
         description: "The path to the directory containing Powerpipe mods"
       }
     },
-    required: ["directory"]
+    required: ["directory"],
+    additionalProperties: false
   },
   handler: async (args: unknown) => {
     const params = validateParams(args);

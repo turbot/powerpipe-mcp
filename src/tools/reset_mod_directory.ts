@@ -7,6 +7,7 @@ export const tool: Tool = {
   inputSchema: {
     type: "object",
     properties: {},
+    additionalProperties: false
   },
   handler: async () => {
     const config = ConfigurationService.getInstance();
