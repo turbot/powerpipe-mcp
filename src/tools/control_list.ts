@@ -10,6 +10,39 @@ interface Control {
   tags: Record<string, string>;
 }
 
+interface RawControl {
+  title?: string;
+  qualified_name?: string;
+  documentation?: string;
+  tags?: unknown;
+}
+
+function parseControls(jsonStr: string): Control[] {
+  const rawControls = JSON.parse(jsonStr);
+  if (!Array.isArray(rawControls)) {
+    throw new Error('Expected array output from Powerpipe CLI');
+  }
+
+  return rawControls.map((control: RawControl) => ({
+    title: control.title || '',
+    qualified_name: control.qualified_name || '',
+    documentation: control.documentation || '',
+    tags: typeof control.tags === 'object' && control.tags !== null ? control.tags as Record<string, string> : {}
+  }));
+}
+
+function formatResult(controls: Control[], cmd: string) {
+  return {
+    content: [{
+      type: "text",
+      text: JSON.stringify({
+        controls,
+        debug: { command: cmd }
+      }, null, 2)
+    }]
+  };
+}
+
 export const tool: Tool = {
   name: "control_list",
   description: "List all available Powerpipe controls",
@@ -29,88 +62,46 @@ export const tool: Tool = {
         POWERPIPE_MOD_DIRECTORY: modDirectory
       };
 
+      // Try to get output from the command
       const output = execSync(cmd, { 
         encoding: 'utf-8',
         env,
         maxBuffer: 10 * 1024 * 1024 // 10MB buffer
       });
-      
-      try {
-        const rawControls = JSON.parse(output);
-        if (!Array.isArray(rawControls)) {
-          throw new Error('Expected array output from Powerpipe CLI');
-        }
 
-        // Filter to only include specified fields
-        const controls = rawControls.map(control => ({
-          title: control.title || '',
-          qualified_name: control.qualified_name || '',
-          documentation: control.documentation || '',
-          tags: typeof control.tags === 'object' && control.tags !== null ? control.tags : {}
-        }));
+      // Parse the successful output
+      const controls = parseControls(output);
+      return formatResult(controls, cmd);
 
-        const result = {
-          controls,
-          debug: {
-            command: cmd
-          }
-        };
-
-        return {
-          content: [{
-            type: "text",
-            text: JSON.stringify(result, null, 2)
-          }]
-        };
-      } catch (parseError) {
-        logger.error('Failed to parse Powerpipe CLI output:', parseError instanceof Error ? parseError.message : String(parseError));
-        logger.error('Powerpipe output:', output);
-        throw new Error(`Failed to parse Powerpipe CLI output: ${parseError instanceof Error ? parseError.message : String(parseError)}. Command: ${cmd}`);
-      }
     } catch (error) {
-      // If it's an error from execSync, it will have stdout and stderr properties
+      // Handle execSync errors
       if (error && typeof error === 'object' && 'stderr' in error) {
-        const execError = error as { stderr: Buffer };
-        const errorMessage = execError.stderr.toString().trim();
+        const execError = error as { stderr: Buffer; stdout?: Buffer };
+        const stderr = execError.stderr.toString().trim();
         
-        // If stderr is empty but we have stdout, try to parse stdout
-        if (!errorMessage && 'stdout' in error && error.stdout) {
+        // If stderr is empty but stdout exists, try to parse stdout
+        if (!stderr && execError.stdout) {
           try {
-            const stdout = error.stdout.toString();
-            const rawControls = JSON.parse(stdout);
-            if (Array.isArray(rawControls)) {
-              const controls = rawControls.map(control => ({
-                title: control.title || '',
-                qualified_name: control.qualified_name || '',
-                documentation: control.documentation || '',
-                tags: typeof control.tags === 'object' && control.tags !== null ? control.tags : {}
-              }));
-
-              const result = {
-                controls,
-                debug: {
-                  command: cmd
-                }
-              };
-
-              return {
-                content: [{
-                  type: "text",
-                  text: JSON.stringify(result, null, 2)
-                }]
-              };
-            }
+            const controls = parseControls(execError.stdout.toString());
+            return formatResult(controls, cmd);
           } catch (parseError) {
             logger.error('Failed to parse Powerpipe CLI stdout:', parseError instanceof Error ? parseError.message : String(parseError));
             throw new Error(`Failed to parse Powerpipe CLI stdout: ${parseError instanceof Error ? parseError.message : String(parseError)}. Command: ${cmd}`);
           }
         }
 
-        logger.error('Failed to run Powerpipe CLI:', errorMessage);
-        throw new Error(`Failed to run Powerpipe CLI: ${errorMessage}. Command: ${cmd}`);
+        // Real stderr error
+        logger.error('Failed to run Powerpipe CLI:', stderr);
+        throw new Error(`Failed to run Powerpipe CLI: ${stderr}. Command: ${cmd}`);
+      }
+
+      // JSON parsing or other errors
+      if (error instanceof SyntaxError) {
+        logger.error('Failed to parse Powerpipe CLI output:', error.message);
+        throw new Error(`Failed to parse Powerpipe CLI output: ${error.message}. Command: ${cmd}`);
       }
       
-      // For other types of errors, include the error message
+      // Unknown errors
       const errorMessage = error instanceof Error ? error.message : String(error);
       logger.error('Failed to run Powerpipe CLI:', errorMessage);
       throw new Error(`Failed to run Powerpipe CLI: ${errorMessage}. Command: ${cmd}`);
