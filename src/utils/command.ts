@@ -14,14 +14,21 @@ export interface CommandError extends Error {
   signal?: string;
 }
 
-const DEFAULT_MAX_BUFFER = 10 * 1024 * 1024; // 10MB buffer
+// Increase default buffer size to handle larger outputs
+// 100MB buffer (increased from 10MB)
+const DEFAULT_MAX_BUFFER = 100 * 1024 * 1024;
+
+// Export the constant so it can be configured if needed
+export const MAX_BUFFER_SIZE = process.env.MCP_MAX_BUFFER_SIZE 
+  ? parseInt(process.env.MCP_MAX_BUFFER_SIZE, 10) 
+  : DEFAULT_MAX_BUFFER;
 
 export function executeCommand(cmd: string, options: CommandOptions = {}) {
   try {
     const execOptions = {
       encoding: 'utf-8' as const,
       env: options.env || process.env,
-      maxBuffer: options.maxBuffer || DEFAULT_MAX_BUFFER
+      maxBuffer: options.maxBuffer || MAX_BUFFER_SIZE
     };
 
     const output = execSync(cmd, execOptions);
@@ -43,10 +50,9 @@ export function executeCommand(cmd: string, options: CommandOptions = {}) {
       commandError.stdout = stdout;
       commandError.stderr = stderr;
 
-      // Set an informative error message
+      // Set an informative error message, excluding stdout to avoid verbosity
       const details = [
         stderr && `Error: ${stderr}`,
-        stdout && `Output: ${stdout}`,
         code && `Exit code: ${code}`,
         signal && `Signal: ${signal}`,
         `Command: ${cmd}`
@@ -54,7 +60,7 @@ export function executeCommand(cmd: string, options: CommandOptions = {}) {
 
       commandError.message = details || 'Command execution failed with no error details';
 
-      // Log the error details
+      // Log the error details (including stdout for debugging purposes)
       logger.error('Command execution failed:', {
         cmd,
         stderr,
