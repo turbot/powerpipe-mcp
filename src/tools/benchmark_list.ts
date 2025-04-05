@@ -75,7 +75,6 @@ export const tool: Tool = {
         const cmdError = error as CommandError;
         const details = [
           cmdError.stderr && `Error: ${cmdError.stderr}`,
-          cmdError.stdout && `Output: ${cmdError.stdout}`,
           cmdError.code && `Exit code: ${cmdError.code}`,
           cmdError.signal && `Signal: ${cmdError.signal}`,
           cmdError.cmd && `Command: ${cmdError.cmd}`

@@ -3,26 +3,19 @@ import { logger } from "../services/logger.js";
 import { ConfigurationService } from "../services/config.js";
 import { executeCommand, CommandError } from "../utils/command.js";
 
-export interface ControlRunParams {
+interface ControlRunParams {
   qualified_name: string;
 }
 
-function validateParams(args: unknown): ControlRunParams {
-  if (!args || typeof args !== 'object') {
-    throw new Error('Invalid arguments');
+function validateParams(params: ControlRunParams): void {
+  if (!params.qualified_name) {
+    throw new Error('Missing required parameter: qualified_name');
   }
-
-  const params = args as Partial<ControlRunParams>;
-  if (!params.qualified_name || typeof params.qualified_name !== 'string') {
-    throw new Error('qualified_name is required and must be a string');
-  }
-
-  return params as ControlRunParams;
 }
 
 export const tool: Tool = {
   name: "control_run",
-  description: "Run a specific Powerpipe control",
+  description: "Run a Powerpipe control by its qualified name",
   inputSchema: {
     type: "object",
     properties: {
@@ -34,11 +27,12 @@ export const tool: Tool = {
     required: ["qualified_name"],
     additionalProperties: false
   },
-  handler: async (args: unknown) => {
-    const params = validateParams(args);
+  handler: async (params: ControlRunParams) => {
+    validateParams(params);
+
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModDirectory();
-    const cmd = `powerpipe control run ${params.qualified_name} --output json --mod-location "${modDirectory}"`;
+    const cmd = `powerpipe control run "${params.qualified_name}" --output json --mod-location "${modDirectory}"`;
 
     const env = {
       ...process.env,
@@ -48,7 +42,6 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const result = JSON.parse(output);
-      
       return {
         content: [{
           type: "text",
@@ -72,7 +65,6 @@ export const tool: Tool = {
         const cmdError = error as CommandError;
         const details = [
           cmdError.stderr && `Error: ${cmdError.stderr}`,
-          cmdError.stdout && `Output: ${cmdError.stdout}`,
           cmdError.code && `Exit code: ${cmdError.code}`,
           cmdError.signal && `Signal: ${cmdError.signal}`,
           cmdError.cmd && `Command: ${cmdError.cmd}`

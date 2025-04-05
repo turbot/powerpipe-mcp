@@ -7,6 +7,7 @@ interface Control {
   title: string;
   qualified_name: string;
   documentation: string;
+  tags: Record<string, string>;
 }
 
 function parseControls(output: string): Control[] {
@@ -19,7 +20,8 @@ function parseControls(output: string): Control[] {
   return rawControls.map(control => ({
     title: control.title || '',
     qualified_name: control.qualified_name || '',
-    documentation: control.documentation || ''
+    documentation: control.documentation || '',
+    tags: typeof control.tags === 'object' && control.tags !== null ? control.tags : {}
   }));
 }
 
@@ -73,7 +75,6 @@ export const tool: Tool = {
         const cmdError = error as CommandError;
         const details = [
           cmdError.stderr && `Error: ${cmdError.stderr}`,
-          cmdError.stdout && `Output: ${cmdError.stdout}`,
           cmdError.code && `Exit code: ${cmdError.code}`,
           cmdError.signal && `Signal: ${cmdError.signal}`,
           cmdError.cmd && `Command: ${cmdError.cmd}`
