@@ -99,8 +99,9 @@ export const tool: Tool = {
                 };
               }
             } catch (parseError) {
-              // If we can't parse stdout as JSON, then throw the original error
+              // If we can't parse stdout as JSON, then throw the parse error
               logger.error('Failed to parse Powerpipe CLI stdout:', parseError instanceof Error ? parseError.message : String(parseError));
+              throw new Error(`Failed to parse Powerpipe CLI stdout: ${parseError instanceof Error ? parseError.message : String(parseError)}. Command: ${cmd}`);
             }
           }
         }
