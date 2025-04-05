@@ -1,7 +1,7 @@
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { logger } from "../services/logger.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand } from "../utils/command.js";
+import { executeCommand, CommandError } from "../utils/command.js";
 
 interface Control {
   title: string;
@@ -66,6 +66,20 @@ export const tool: Tool = {
       if (error instanceof SyntaxError) {
         logger.error('Failed to parse Powerpipe CLI output:', error.message);
         throw new Error(`Failed to parse Powerpipe CLI output: ${error.message}. Command: ${cmd}`);
+      }
+
+      // Command execution errors
+      if (error instanceof Error && 'stderr' in error) {
+        const cmdError = error as CommandError;
+        const details = [
+          cmdError.stderr && `Error: ${cmdError.stderr}`,
+          cmdError.stdout && `Output: ${cmdError.stdout}`,
+          cmdError.code && `Exit code: ${cmdError.code}`,
+          cmdError.signal && `Signal: ${cmdError.signal}`,
+          cmdError.cmd && `Command: ${cmdError.cmd}`
+        ].filter(Boolean).join('\n');
+
+        throw new Error(`Failed to run Powerpipe CLI:\n${details}`);
       }
       
       // Re-throw other errors
