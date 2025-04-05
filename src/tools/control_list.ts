@@ -31,7 +31,8 @@ export const tool: Tool = {
 
       const output = execSync(cmd, { 
         encoding: 'utf-8',
-        env
+        env,
+        maxBuffer: 10 * 1024 * 1024 // 10MB buffer
       });
       
       try {
