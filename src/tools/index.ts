@@ -6,6 +6,7 @@ import { tool as getModDirectoryTool } from './get_mod_directory.js';
 import { tool as resetModDirectoryTool } from './reset_mod_directory.js';
 import { tool as benchmarkListTool } from './benchmark_list.js';
 import { tool as benchmarkShowTool } from './benchmark_show.js';
+import { tool as benchmarkRunTool } from './benchmark_run.js';
 import { tool as controlListTool } from './control_list.js';
 import { tool as controlShowTool } from './control_show.js';
 import { tool as controlRunTool } from './control_run.js';
@@ -25,6 +26,7 @@ export const tools = {
   reset_mod_directory: resetModDirectoryTool,
   benchmark_list: benchmarkListTool,
   benchmark_show: benchmarkShowTool,
+  benchmark_run: benchmarkRunTool,
   control_list: controlListTool,
   control_show: controlShowTool,
   control_run: controlRunTool,
