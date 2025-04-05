@@ -1,17 +1,23 @@
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { execSync } from "node:child_process";
 import { logger } from "../services/logger.js";
 import { ConfigurationService } from "../services/config.js";
+import { executeCommand } from "../utils/command.js";
 
 export interface DetectionRunParams {
   qualified_name: string;
 }
 
 function validateParams(args: unknown): DetectionRunParams {
-  if (!args || typeof args !== 'object' || !('qualified_name' in args) || typeof args.qualified_name !== 'string') {
-    throw new Error('Invalid arguments for detection_run - requires {qualified_name: string}');
+  if (!args || typeof args !== 'object') {
+    throw new Error('Invalid arguments');
   }
-  return { qualified_name: args.qualified_name };
+
+  const params = args as Partial<DetectionRunParams>;
+  if (!params.qualified_name || typeof params.qualified_name !== 'string') {
+    throw new Error('qualified_name is required and must be a string');
+  }
+
+  return params as DetectionRunParams;
 }
 
 export const tool: Tool = {
@@ -30,51 +36,39 @@ export const tool: Tool = {
   },
   handler: async (args: unknown) => {
     const params = validateParams(args);
+    const config = ConfigurationService.getInstance();
+    const modDirectory = config.getModDirectory();
+    const cmd = `powerpipe detection run ${params.qualified_name} --output json --mod-location "${modDirectory}"`;
+
+    const env = {
+      ...process.env,
+      POWERPIPE_MOD_DIRECTORY: modDirectory
+    };
+
     try {
-      const config = ConfigurationService.getInstance();
-      const modDirectory = config.getModDirectory();
-      const cmd = `powerpipe detection run ${params.qualified_name} --output json --mod-location "${modDirectory}"`;
-
-      const env = {
-        ...process.env,
-        POWERPIPE_MOD_DIRECTORY: modDirectory
+      const output = executeCommand(cmd, { env });
+      const result = JSON.parse(output);
+      
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({
+            result,
+            debug: {
+              command: cmd
+            }
+          }, null, 2)
+        }]
       };
-
-      const output = execSync(cmd, { 
-        encoding: 'utf-8',
-        env
-      });
-      
-      try {
-        const result = JSON.parse(output);
-        
-        return {
-          content: [{
-            type: "text",
-            text: JSON.stringify({
-              result,
-              debug: {
-                command: cmd
-              }
-            }, null, 2)
-          }]
-        };
-      } catch (parseError) {
-        logger.error('Failed to parse Powerpipe CLI output:', parseError instanceof Error ? parseError.message : String(parseError));
-        logger.error('Powerpipe output:', output);
-        throw new Error(`Failed to parse Powerpipe CLI output: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
-      }
     } catch (error) {
-      // If it's an error from execSync, it will have stdout and stderr properties
-      if (error && typeof error === 'object' && 'stderr' in error) {
-        const execError = error as { stderr: Buffer };
-        const errorMessage = execError.stderr.toString();
-        logger.error('Failed to run Powerpipe CLI:', errorMessage);
-        throw new Error(`Failed to run Powerpipe CLI: ${errorMessage}`);
+      // JSON parsing errors
+      if (error instanceof SyntaxError) {
+        logger.error('Failed to parse Powerpipe CLI output:', error.message);
+        throw new Error(`Failed to parse Powerpipe CLI output: ${error.message}. Command: ${cmd}`);
       }
       
-      logger.error('Failed to run Powerpipe CLI:', error instanceof Error ? error.message : String(error));
-      throw new Error(`Failed to run Powerpipe CLI: ${error instanceof Error ? error.message : String(error)}`);
+      // Re-throw other errors
+      throw error;
     }
   }
 }; 
