@@ -14,14 +14,13 @@ export interface CommandError extends Error {
   signal?: string;
 }
 
-// Increase default buffer size to handle larger outputs
-// 100MB buffer (increased from 10MB)
-const DEFAULT_MAX_BUFFER = 100 * 1024 * 1024;
+// Default buffer size (100MB)
+const DEFAULT_BUFFER_SIZE_MB = 100;
 
-// Export the constant so it can be configured if needed
-export const MAX_BUFFER_SIZE = process.env.MCP_MAX_BUFFER_SIZE 
-  ? parseInt(process.env.MCP_MAX_BUFFER_SIZE, 10) 
-  : DEFAULT_MAX_BUFFER;
+// Convert MB to bytes and handle the environment variable
+export const MAX_BUFFER_SIZE = process.env.POWERPIPE_MEMORY_MAX_MB 
+  ? parseInt(process.env.POWERPIPE_MEMORY_MAX_MB, 10) * 1024 * 1024 // Convert MB to bytes
+  : DEFAULT_BUFFER_SIZE_MB * 1024 * 1024;
 
 export function executeCommand(cmd: string, options: CommandOptions = {}) {
   try {

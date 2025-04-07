@@ -219,10 +219,11 @@ The following environment variables can be used to configure the MCP server:
   - INFO
   - DEBUG
   - TRACE
+- `POWERPIPE_MEMORY_MAX_MB`: Maximum memory buffer size in megabytes (default: 100)
 
 Example:
 ```bash
-POWERPIPE_MOD_LOCATION=/path/to/mods POWERPIPE_LOG_LEVEL=DEBUG node dist/index.js
+POWERPIPE_MOD_LOCATION=/path/to/mods POWERPIPE_LOG_LEVEL=DEBUG POWERPIPE_MEMORY_MAX_MB=200 node dist/index.js
 ```
 
 ### Local Development with Cursor
