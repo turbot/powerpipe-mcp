@@ -95,7 +95,7 @@ You can optionally specify a working directory for your Powerpipe mods:
     "name": "Powerpipe",
     "description": "Work with Powerpipe benchmarks and controls",
     "server": "github:turbot/powerpipe-mcp",
-    "args": ["--mod-directory", "/path/to/your/mods"]
+    "args": ["--mod-location", "/path/to/your/mods"]
   }
 }
 ```
@@ -126,24 +126,24 @@ To install the Powerpipe MCP server in Cursor:
 
 ### Working Directory Configuration
 
-The Powerpipe MCP server can be configured to work with mods in a specific directory. There are several ways to set this:
+The Powerpipe MCP server can be configured to work with mods in a specific location. There are several ways to set this:
 
 1. Environment Variable:
 ```bash
-POWERPIPE_MOD_LOCATION=/path/to/mods node dist/index.js
+POWERPIPE_MCP_MOD_LOCATION=/path/to/mods node dist/index.js
 ```
 
 2. Command Line Argument:
 ```bash
-node dist/index.js --mod-directory /path/to/mods
+node dist/index.js --mod-location /path/to/mods
 ```
 
 3. Using the Configuration Tool:
 ```
-Set the working directory to /path/to/mods
+Set the mod location to /path/to/mods
 ```
 
-The working directory can be changed at any time during operation using the configuration tools.
+The mod location can be changed at any time during operation using the configuration tools.
 
 ### Best Practices
 
@@ -164,7 +164,7 @@ List controls related to S3 bucket encryption.
 
 What remediation steps are suggested for non-compliant IAM password policies?
 
-Set the working directory to /path/to/my/custom/mods
+Set the mod location to /path/to/my/custom/mods
 ```
 
 ### Writing Good Prompts
@@ -174,7 +174,7 @@ When writing prompts:
 - Be specific about what compliance aspects you want to check
 - Reference specific benchmarks or control categories
 - Include context about your compliance requirements
-- Specify the working directory if using custom mods
+- Specify the mod location if using custom mods
 
 ## Development
 
@@ -203,9 +203,9 @@ npm run build
 node dist/index.js
 ```
 
-With custom mod directory:
+With custom mod location:
 ```bash
-node dist/index.js --mod-directory /path/to/mods
+node dist/index.js --mod-location /path/to/mods
 ```
 
 ### Environment Variables
