@@ -24,7 +24,7 @@ export class Logger {
   private logs: string[] = []; // Store logs when in test mode
 
   constructor(options: LoggerOptions = {}) {
-    const envLevel = (process.env.POWERPIPE_MCP_LOG_LEVEL || 'info').toLowerCase();
+    const envLevel = (process.env.POWERPIPE_LOG_LEVEL || 'info').toLowerCase();
     this.options = {
       level: options.level || (this.isValidLogLevel(envLevel) ? envLevel as LogLevel : LogLevel.INFO),
       isTestEnvironment: options.isTestEnvironment || false
@@ -47,7 +47,7 @@ export class Logger {
    * Get log level from environment variable
    */
   private getLogLevelFromEnv(): LogLevel {
-    const envLevel = process.env.POWERPIPE_MCP_LOG_LEVEL?.toUpperCase();
+    const envLevel = process.env.POWERPIPE_LOG_LEVEL?.toUpperCase();
     
     if (envLevel === 'DEBUG') return LogLevel.DEBUG;
     if (envLevel === 'INFO') return LogLevel.INFO;
