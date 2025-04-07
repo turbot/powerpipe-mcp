@@ -130,7 +130,7 @@ The Powerpipe MCP server can be configured to work with mods in a specific direc
 
 1. Environment Variable:
 ```bash
-POWERPIPE_MOD_DIRECTORY=/path/to/mods node dist/index.js
+POWERPIPE_MOD_LOCATION=/path/to/mods node dist/index.js
 ```
 
 2. Command Line Argument:
@@ -210,7 +210,7 @@ node dist/index.js --mod-directory /path/to/mods
 
 ### Environment Variables
 
-- `POWERPIPE_MOD_DIRECTORY`: Set the working directory for Powerpipe mods
+- `POWERPIPE_MOD_LOCATION`: Set the working directory for Powerpipe mods
 - `POWERPIPE_MCP_LOG_LEVEL`: Control logging verbosity with these values:
   - ERROR
   - WARN
@@ -221,7 +221,7 @@ node dist/index.js --mod-directory /path/to/mods
 
 Example:
 ```bash
-POWERPIPE_MOD_DIRECTORY=/path/to/mods POWERPIPE_MCP_LOG_LEVEL=DEBUG node dist/index.js
+POWERPIPE_MOD_LOCATION=/path/to/mods POWERPIPE_MCP_LOG_LEVEL=DEBUG node dist/index.js
 ```
 
 ### Local Development with Cursor

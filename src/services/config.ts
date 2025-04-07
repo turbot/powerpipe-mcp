@@ -1,16 +1,14 @@
 import * as path from 'path';
-import { Logger } from './logger.js';
+import { logger } from "./logger.js";
 
 export class ConfigurationService {
   private static instance: ConfigurationService;
-  private modDirectory: string;
   private defaultModDirectory: string;
-  private logger: Logger;
 
   private constructor() {
-    this.logger = new Logger();
-    this.defaultModDirectory = process.env.POWERPIPE_MOD_DIRECTORY || process.cwd();
-    this.modDirectory = this.defaultModDirectory;
+    // Initialize with environment variable or default to current working directory
+    this.defaultModDirectory = process.env.POWERPIPE_MOD_LOCATION || process.cwd();
+    logger.debug(`Initialized ConfigurationService with mod directory: ${this.defaultModDirectory}`);
   }
 
   public static getInstance(): ConfigurationService {
@@ -29,11 +27,11 @@ export class ConfigurationService {
     try {
       const resolvedPath = path.resolve(directory);
       // TODO: Add validation that the directory contains valid Powerpipe mods
-      this.modDirectory = resolvedPath;
-      this.logger.info(`Set mod directory to: ${resolvedPath}`);
+      this.defaultModDirectory = resolvedPath;
+      logger.info(`Set mod directory to: ${resolvedPath}`);
       return true;
     } catch (error) {
-      this.logger.error(`Failed to set mod directory: ${error}`);
+      logger.error(`Failed to set mod directory: ${error}`);
       return false;
     }
   }
@@ -43,7 +41,7 @@ export class ConfigurationService {
    * @returns The absolute path to the current mod directory
    */
   public getModDirectory(): string {
-    return this.modDirectory;
+    return this.defaultModDirectory;
   }
 
   /**
@@ -52,11 +50,11 @@ export class ConfigurationService {
    */
   public resetModDirectory(): boolean {
     try {
-      this.modDirectory = this.defaultModDirectory;
-      this.logger.info(`Reset mod directory to default: ${this.defaultModDirectory}`);
+      this.defaultModDirectory = this.defaultModDirectory;
+      logger.info(`Reset mod directory to default: ${this.defaultModDirectory}`);
       return true;
     } catch (error) {
-      this.logger.error(`Failed to reset mod directory: ${error}`);
+      logger.error(`Failed to reset mod directory: ${error}`);
       return false;
     }
   }

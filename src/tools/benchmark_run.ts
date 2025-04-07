@@ -42,7 +42,7 @@ export const tool: Tool = {
 
     const env = {
       ...process.env,
-      POWERPIPE_MOD_DIRECTORY: modDirectory
+      POWERPIPE_MOD_LOCATION: modDirectory
     };
 
     try {
