@@ -1,9 +1,7 @@
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolRequest, type Tool, type ServerResult } from "@modelcontextprotocol/sdk/types.js";
 
-import { tool as setModLocationTool } from './set_mod_location.js';
-import { tool as getModLocationTool } from './get_mod_location.js';
-import { tool as resetModLocationTool } from './reset_mod_location.js';
+import { tool as modLocationTool } from './mod_location.js';
 import { tool as benchmarkListTool } from './benchmark_list.js';
 import { tool as benchmarkShowTool } from './benchmark_show.js';
 import { tool as benchmarkRunTool } from './benchmark_run.js';
@@ -13,7 +11,6 @@ import { tool as controlRunTool } from './control_run.js';
 import { tool as detectionListTool } from './detection_list.js';
 import { tool as detectionShowTool } from './detection_show.js';
 import { tool as detectionRunTool } from './detection_run.js';
-import { tool as modListTool } from './mod_list.js';
 import { tool as queryListTool } from './query_list.js';
 import { tool as queryShowTool } from './query_show.js';
 import { tool as variableListTool } from './variable_list.js';
@@ -21,9 +18,7 @@ import { tool as variableShowTool } from './variable_show.js';
 
 // Export all tools for server capabilities
 export const tools = {
-  set_mod_location: setModLocationTool,
-  get_mod_location: getModLocationTool,
-  reset_mod_location: resetModLocationTool,
+  mod_location: modLocationTool,
   benchmark_list: benchmarkListTool,
   benchmark_show: benchmarkShowTool,
   benchmark_run: benchmarkRunTool,
@@ -33,12 +28,11 @@ export const tools = {
   detection_list: detectionListTool,
   detection_show: detectionShowTool,
   detection_run: detectionRunTool,
-  mod_list: modListTool,
   query_list: queryListTool,
   query_show: queryShowTool,
   variable_list: variableListTool,
-  variable_show: variableShowTool,
-} satisfies Record<string, Tool>;
+  variable_show: variableShowTool
+};
 
 // Initialize tool handlers
 export function setupTools(server: Server) {
