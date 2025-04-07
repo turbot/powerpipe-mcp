@@ -1,7 +1,7 @@
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolRequest, type Tool, type ServerResult } from "@modelcontextprotocol/sdk/types.js";
 
-import { tool as setModDirectoryTool } from './set_mod_directory.js';
+import { tool as setModLocationTool } from './set_mod_location.js';
 import { tool as getModLocationTool } from './get_mod_location.js';
 import { tool as resetModLocationTool } from './reset_mod_location.js';
 import { tool as benchmarkListTool } from './benchmark_list.js';
@@ -21,7 +21,7 @@ import { tool as variableShowTool } from './variable_show.js';
 
 // Export all tools for server capabilities
 export const tools = {
-  set_mod_directory: setModDirectoryTool,
+  set_mod_location: setModLocationTool,
   get_mod_location: getModLocationTool,
   reset_mod_location: resetModLocationTool,
   benchmark_list: benchmarkListTool,
