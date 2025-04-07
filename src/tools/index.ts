@@ -1,36 +1,48 @@
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolRequest, type Tool, type ServerResult } from "@modelcontextprotocol/sdk/types.js";
 
-import { tool as modLocationTool } from './mod_location.js';
+// Most Frequently Used Operations
 import { tool as benchmarkListTool } from './benchmark_list.js';
 import { tool as benchmarkShowTool } from './benchmark_show.js';
 import { tool as benchmarkRunTool } from './benchmark_run.js';
 import { tool as controlListTool } from './control_list.js';
 import { tool as controlShowTool } from './control_show.js';
 import { tool as controlRunTool } from './control_run.js';
+
+// Secondary Operations
 import { tool as detectionListTool } from './detection_list.js';
 import { tool as detectionShowTool } from './detection_show.js';
 import { tool as detectionRunTool } from './detection_run.js';
 import { tool as queryListTool } from './query_list.js';
 import { tool as queryShowTool } from './query_show.js';
+
+// Configuration & Utilities
+import { tool as modLocationTool } from './mod_location.js';
 import { tool as variableListTool } from './variable_list.js';
 import { tool as variableShowTool } from './variable_show.js';
 
 // Export all tools for server capabilities
 export const tools = {
-  mod_location: modLocationTool,
-  benchmark_list: benchmarkListTool,
-  benchmark_show: benchmarkShowTool,
-  benchmark_run: benchmarkRunTool,
-  control_list: controlListTool,
-  control_show: controlShowTool,
-  control_run: controlRunTool,
-  detection_list: detectionListTool,
+  // Most Frequently Used Operations
+  benchmark_list: benchmarkListTool,    // Primary entry point for users finding benchmarks
+  benchmark_show: benchmarkShowTool,    // Detailed benchmark info
+  benchmark_run: benchmarkRunTool,      // Running benchmarks - core operation
+
+  control_list: controlListTool,        // Finding available controls
+  control_show: controlShowTool,        // Control details
+  control_run: controlRunTool,          // Running controls - core operation
+
+  // Secondary Operations
+  detection_list: detectionListTool,    // Less commonly used than benchmarks/controls
   detection_show: detectionShowTool,
   detection_run: detectionRunTool,
-  query_list: queryListTool,
+
+  query_list: queryListTool,           // More technical/advanced usage
   query_show: queryShowTool,
-  variable_list: variableListTool,
+
+  // Configuration & Utilities
+  mod_location: modLocationTool,       // Usually set once and rarely changed
+  variable_list: variableListTool,     // Supporting operations
   variable_show: variableShowTool
 };
 
