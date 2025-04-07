@@ -7,7 +7,10 @@ export class ConfigurationService {
 
   private constructor() {
     // Initialize with environment variable or default to current working directory
-    this.defaultModDirectory = process.env.POWERPIPE_MOD_LOCATION || process.cwd();
+    // Check for MCP-specific var first, fall back to general Powerpipe var, then cwd
+    this.defaultModDirectory = process.env.POWERPIPE_MCP_MOD_LOCATION || 
+      process.env.POWERPIPE_MOD_LOCATION ||
+      process.cwd();
     logger.debug(`Initialized ConfigurationService with mod directory: ${this.defaultModDirectory}`);
   }
 

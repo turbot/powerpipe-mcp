@@ -212,19 +212,21 @@ node dist/index.js --mod-directory /path/to/mods
 
 The following environment variables can be used to configure the MCP server:
 
-- `POWERPIPE_MOD_LOCATION`: Set the working directory for Powerpipe mods
-- `POWERPIPE_LOG_LEVEL`: Control logging verbosity with these values:
+- `POWERPIPE_MCP_MOD_LOCATION`: Set the working directory for Powerpipe mods (falls back to POWERPIPE_MOD_LOCATION if not set)
+- `POWERPIPE_MCP_LOG_LEVEL`: Control MCP server logging verbosity with these values:
   - ERROR
   - WARN
   - INFO
   - DEBUG
   - TRACE
-- `POWERPIPE_MEMORY_MAX_MB`: Maximum memory buffer size in megabytes (default: 100)
+- `POWERPIPE_MCP_MEMORY_MAX_MB`: Maximum memory buffer size in megabytes (default: 100)
 
 Example:
 ```bash
-POWERPIPE_MOD_LOCATION=/path/to/mods POWERPIPE_LOG_LEVEL=DEBUG POWERPIPE_MEMORY_MAX_MB=200 node dist/index.js
+POWERPIPE_MCP_MOD_LOCATION=/path/to/mods POWERPIPE_MCP_LOG_LEVEL=DEBUG POWERPIPE_MCP_MEMORY_MAX_MB=200 node dist/index.js
 ```
+
+Note: When using the Powerpipe CLI through the MCP server, the `POWERPIPE_MOD_LOCATION` environment variable is automatically set based on the MCP configuration.
 
 ### Local Development with Cursor
 

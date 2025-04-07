@@ -18,8 +18,8 @@ export interface CommandError extends Error {
 const DEFAULT_BUFFER_SIZE_MB = 100;
 
 // Convert MB to bytes and handle the environment variable
-export const MAX_BUFFER_SIZE = process.env.POWERPIPE_MEMORY_MAX_MB 
-  ? parseInt(process.env.POWERPIPE_MEMORY_MAX_MB, 10) * 1024 * 1024 // Convert MB to bytes
+export const MAX_BUFFER_SIZE = process.env.POWERPIPE_MCP_MEMORY_MAX_MB 
+  ? parseInt(process.env.POWERPIPE_MCP_MEMORY_MAX_MB, 10) * 1024 * 1024 // Convert MB to bytes
   : DEFAULT_BUFFER_SIZE_MB * 1024 * 1024;
 
 export function executeCommand(cmd: string, options: CommandOptions = {}) {
