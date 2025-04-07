@@ -32,7 +32,7 @@ export const tool: Tool = {
     const params = validateParams(args);
     try {
       const config = ConfigurationService.getInstance();
-      const modDirectory = config.getModDirectory();
+      const modDirectory = config.getModLocation();
       const cmd = `powerpipe control show ${params.qualified_name} --output json --mod-location "${modDirectory}"`;
 
       const env = {

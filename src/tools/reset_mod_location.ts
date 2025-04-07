@@ -2,8 +2,8 @@ import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
 
 export const tool: Tool = {
-  name: "get_mod_directory",
-  description: "Get the current working directory for Powerpipe mods",
+  name: "reset_mod_location",
+  description: "Reset the mod location to default",
   inputSchema: {
     type: "object",
     properties: {},
@@ -11,15 +11,12 @@ export const tool: Tool = {
   },
   handler: async () => {
     const config = ConfigurationService.getInstance();
-    const directory = config.getModDirectory();
-    
+    const success = config.resetModLocation();
+    const location = config.getModLocation();
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({
-          directory,
-          message: `Current mod directory: ${directory}`
-        }, null, 2)
+        text: success ? `Reset mod location to: ${location}` : "Failed to reset mod location"
       }]
     };
   }

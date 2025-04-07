@@ -37,7 +37,7 @@ export const tool: Tool = {
   handler: async (args: unknown) => {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
-    const modDirectory = config.getModDirectory();
+    const modDirectory = config.getModLocation();
     const cmd = `powerpipe variable show ${params.qualified_name} --output json --mod-location "${modDirectory}"`;
 
     const env = {

@@ -49,7 +49,7 @@ export const tool: Tool = {
   },
   handler: async () => {
     const config = ConfigurationService.getInstance();
-    const modDirectory = config.getModDirectory();
+    const modDirectory = config.getModLocation();
     const cmd = `powerpipe detection list --output json --mod-location "${modDirectory}"`;
 
     const env = {
