@@ -219,7 +219,6 @@ The following environment variables can be used to configure the MCP server:
   - INFO
   - DEBUG
   - TRACE
-- `POWERPIPE_MCP_DEBUG`: Set to 'true' to enable additional debug logging
 
 Example:
 ```bash
