@@ -22,15 +22,20 @@ export async function handleStatusResource(uri: string): Promise<ServerResult | 
   }
   
   try {
-    const cmd = buildPowerpipeCommand('version', '', { output: 'json' });
+    const cmd = buildPowerpipeCommand('--version', '', { output: 'json' });
     const output = executeCommand(cmd);
-    const version = JSON.parse(output);
+    
+    // Version output is not JSON, so we need to parse it manually
+    const versionMatch = output.trim().match(/v?(\d+\.\d+(\.\d+)?)/i);
+    const version = versionMatch ? versionMatch[1] : output.trim();
 
     return {
       content: [{
         type: "text",
         text: JSON.stringify({
-          version,
+          powerpipe: {
+            version
+          },
           server: {
             version: process.env.MCP_SERVER_VERSION || 'unknown',
             startTime: process.env.MCP_SERVER_START_TIME || 'unknown'
