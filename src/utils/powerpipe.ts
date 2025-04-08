@@ -8,13 +8,22 @@ import path from 'path';
  * @returns The complete command string
  */
 export function buildPowerpipeCommand(command: string, modLocation: string, options: { output?: string } = {}): string {
-  const parts = [
-    'powerpipe',
-    command,
-    '--no-update-check',
-    `--mod-location "${modLocation}"`,
-  ];
+  const parts = ['powerpipe'];
 
+  // Add the command
+  parts.push(command);
+
+  // Only add --no-update-check for subcommands (not for global flags like --version)
+  if (!command.startsWith('--')) {
+    parts.push('--no-update-check');
+  }
+
+  // Add mod location if provided
+  if (modLocation) {
+    parts.push(`--mod-location "${modLocation}"`);
+  }
+
+  // Add output format if specified
   if (options.output) {
     parts.push(`--output ${options.output}`);
   }

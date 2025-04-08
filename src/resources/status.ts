@@ -22,7 +22,7 @@ export async function handleStatusResource(uri: string): Promise<ServerResult | 
   }
   
   try {
-    const cmd = buildPowerpipeCommand('--version', '', { output: 'json' });
+    const cmd = buildPowerpipeCommand('--version', '');
     const output = executeCommand(cmd);
     
     // Version output is not JSON, so we need to parse it manually
