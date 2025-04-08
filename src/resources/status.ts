@@ -15,7 +15,7 @@ interface ResourceResponse {
 }
 
 // Define a function to handle status resource requests
-export async function handleStatusResource(uri: string): Promise<ServerResult | null> {
+export async function handleStatusResource(uri: string): Promise<ResourceResponse | null> {
   // Check if this is a status resource URI
   if (uri !== 'powerpipe://status') {
     return null;
@@ -30,8 +30,9 @@ export async function handleStatusResource(uri: string): Promise<ServerResult | 
     const version = versionMatch ? versionMatch[1] : output.trim();
 
     return {
-      content: [{
-        type: "text",
+      contents: [{
+        uri,
+        mimeType: "application/json",
         text: JSON.stringify({
           powerpipe: {
             version
@@ -41,7 +42,8 @@ export async function handleStatusResource(uri: string): Promise<ServerResult | 
             startTime: process.env.MCP_SERVER_START_TIME || 'unknown'
           }
         }, null, 2)
-      }]
+      }],
+      _meta: {}
     };
   } catch (error) {
     throw formatCommandError(error);
