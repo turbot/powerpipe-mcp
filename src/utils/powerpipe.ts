@@ -35,5 +35,7 @@ export function getPowerpipeEnv(modLocation: string): NodeJS.ProcessEnv {
   return {
     ...process.env,
     POWERPIPE_MOD_LOCATION: modLocation,
+    // Disable automatic update checking
+    POWERPIPE_UPDATE_CHECK: 'false',
   };
 } 
