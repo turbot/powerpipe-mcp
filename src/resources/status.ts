@@ -1,5 +1,7 @@
-import { execSync } from "node:child_process";
-import { logger } from '../services/logger.js';
+import type { ServerResult } from "@modelcontextprotocol/sdk/types.js";
+import { executeCommand, type CommandError } from "../utils/command.js";
+import { buildPowerpipeCommand } from "../utils/powerpipe.js";
+import { logger } from "../services/logger.js";
 
 interface ResourceContent {
   uri: string;
@@ -13,7 +15,7 @@ interface ResourceResponse {
 }
 
 // Define a function to handle status resource requests
-export async function handleStatusResource(uri: string): Promise<ResourceResponse | null> {
+export async function handleStatusResource(uri: string): Promise<ServerResult | null> {
   // Check if this is a status resource URI
   if (uri !== 'powerpipe://status') {
     return null;
@@ -22,8 +24,8 @@ export async function handleStatusResource(uri: string): Promise<ResourceRespons
   // Get Powerpipe CLI version (when available)
   let powerpipeVersion = 'Not installed';
   try {
-    // Using 'powerpipe --version'
-    const output = execSync('powerpipe --version', { encoding: 'utf-8' });
+    const cmd = buildPowerpipeCommand('--version', '', {});
+    const output = executeCommand(cmd);
     // Use a regex to extract the version number directly
     const versionMatch = output.trim().match(/v?(\d+\.\d+(\.\d+)?)/i);
     if (versionMatch && versionMatch[1]) {
@@ -32,9 +34,21 @@ export async function handleStatusResource(uri: string): Promise<ResourceRespons
       logger.error('Unexpected powerpipe version output format:', output);
       powerpipeVersion = output.trim();
     }
-  } catch (err) {
-    // Powerpipe CLI is not installed or failed to run
-    logger.error('Error getting powerpipe version:', err instanceof Error ? err.message : String(err));
+  } catch (error) {
+    // Command execution errors
+    if (error instanceof Error && 'stderr' in error) {
+      const cmdError = error as CommandError;
+      const details = [
+        cmdError.stderr && `Error: ${cmdError.stderr}`,
+        cmdError.code && `Exit code: ${cmdError.code}`,
+        cmdError.signal && `Signal: ${cmdError.signal}`,
+        cmdError.cmd && `Command: ${cmdError.cmd}`
+      ].filter(Boolean).join('\n');
+
+      logger.error('Error getting powerpipe version:', details);
+    } else {
+      logger.error('Error getting powerpipe version:', error instanceof Error ? error.message : String(error));
+    }
     powerpipeVersion = 'Not installed or failed to run';
   }
   

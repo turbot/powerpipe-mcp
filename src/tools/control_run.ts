@@ -1,16 +1,24 @@
-import { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { logger } from "../services/logger.js";
+import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, CommandError } from "../utils/command.js";
+import { executeCommand, type CommandError } from "../utils/command.js";
+import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
+import { logger } from "../services/logger.js";
 
 interface ControlRunParams {
   qualified_name: string;
 }
 
-function validateParams(params: ControlRunParams): void {
-  if (!params.qualified_name) {
-    throw new Error('Missing required parameter: qualified_name');
+function validateParams(args: unknown): ControlRunParams {
+  if (!args || typeof args !== 'object') {
+    throw new Error('Arguments must be an object');
   }
+
+  const params = args as Partial<ControlRunParams>;
+  if (!params.qualified_name || typeof params.qualified_name !== 'string') {
+    throw new Error('qualified_name is required and must be a string');
+  }
+
+  return params as ControlRunParams;
 }
 
 export const tool: Tool = {
@@ -32,12 +40,8 @@ export const tool: Tool = {
 
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = `powerpipe control run "${params.qualified_name}" --output json --mod-location "${modDirectory}"`;
-
-    const env = {
-      ...process.env,
-      POWERPIPE_MOD_LOCATION: modDirectory
-    };
+    const cmd = buildPowerpipeCommand(`control run "${params.qualified_name}"`, modDirectory, { output: 'json' });
+    const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });

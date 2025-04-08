@@ -1,7 +1,8 @@
-import { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { logger } from "../services/logger.js";
+import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, CommandError } from "../utils/command.js";
+import { executeCommand, type CommandError } from "../utils/command.js";
+import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
+import { logger } from "../services/logger.js";
 
 interface Benchmark {
   title: string;
@@ -26,17 +27,15 @@ function parseBenchmarks(output: string): Benchmark[] {
 }
 
 function formatResult(benchmarks: Benchmark[], cmd: string) {
-  const result = {
-    benchmarks,
-    debug: {
-      command: cmd
-    }
-  };
-
   return {
     content: [{
       type: "text",
-      text: JSON.stringify(result, null, 2)
+      text: JSON.stringify({
+        benchmarks,
+        debug: {
+          command: cmd
+        }
+      }, null, 2)
     }]
   };
 }
@@ -52,12 +51,8 @@ export const tool: Tool = {
   handler: async () => {
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = `powerpipe benchmark list --output json --mod-location "${modDirectory}"`;
-
-    const env = {
-      ...process.env,
-      POWERPIPE_MOD_LOCATION: modDirectory
-    };
+    const cmd = buildPowerpipeCommand('benchmark list', modDirectory, { output: 'json' });
+    const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });

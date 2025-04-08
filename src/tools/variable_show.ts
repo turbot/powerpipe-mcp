@@ -1,15 +1,16 @@
-import { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { logger } from "../services/logger.js";
+import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand } from "../utils/command.js";
+import { executeCommand, type CommandError } from "../utils/command.js";
+import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
+import { logger } from "../services/logger.js";
 
-export interface VariableShowParams {
+interface VariableShowParams {
   qualified_name: string;
 }
 
 function validateParams(args: unknown): VariableShowParams {
   if (!args || typeof args !== 'object') {
-    throw new Error('Invalid arguments');
+    throw new Error('Arguments must be an object');
   }
 
   const params = args as Partial<VariableShowParams>;
@@ -38,28 +39,22 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = `powerpipe variable show ${params.qualified_name} --output json --mod-location "${modDirectory}"`;
-
-    const env = {
-      ...process.env,
-      POWERPIPE_MOD_LOCATION: modDirectory
-    };
+    const cmd = buildPowerpipeCommand(`variable show ${params.qualified_name}`, modDirectory, { output: 'json' });
+    const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
       const variable = JSON.parse(output);
       
-      const result = {
-        variable,
-        debug: {
-          command: cmd
-        }
-      };
-
       return {
         content: [{
           type: "text",
-          text: JSON.stringify(result, null, 2)
+          text: JSON.stringify({
+            variable,
+            debug: {
+              command: cmd
+            }
+          }, null, 2)
         }]
       };
     } catch (error) {
@@ -67,6 +62,19 @@ export const tool: Tool = {
       if (error instanceof SyntaxError) {
         logger.error('Failed to parse Powerpipe CLI output:', error.message);
         throw new Error(`Failed to parse Powerpipe CLI output: ${error.message}. Command: ${cmd}`);
+      }
+      
+      // Command execution errors
+      if (error instanceof Error && 'stderr' in error) {
+        const cmdError = error as CommandError;
+        const details = [
+          cmdError.stderr && `Error: ${cmdError.stderr}`,
+          cmdError.code && `Exit code: ${cmdError.code}`,
+          cmdError.signal && `Signal: ${cmdError.signal}`,
+          cmdError.cmd && `Command: ${cmdError.cmd}`
+        ].filter(Boolean).join('\n');
+
+        throw new Error(`Failed to run Powerpipe CLI:\n${details}`);
       }
       
       // Re-throw other errors
