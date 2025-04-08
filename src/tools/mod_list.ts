@@ -1,7 +1,8 @@
-import { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { logger } from "../services/logger.js";
+import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand } from "../utils/command.js";
+import { executeCommand, formatCommandError } from "../utils/command.js";
+import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
+import { logger } from "../services/logger.js";
 
 interface Mod {
   title: string;
@@ -50,26 +51,15 @@ export const tool: Tool = {
   handler: async () => {
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = `powerpipe mod list --output json --mod-location "${modDirectory}"`;
-
-    const env = {
-      ...process.env,
-      POWERPIPE_MOD_LOCATION: modDirectory
-    };
+    const cmd = buildPowerpipeCommand('mod list', modDirectory, { output: 'json' });
+    const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
       const mods = parseMods(output);
       return formatResult(mods, cmd);
     } catch (error) {
-      // JSON parsing errors
-      if (error instanceof SyntaxError) {
-        logger.error('Failed to parse Powerpipe CLI output:', error.message);
-        throw new Error(`Failed to parse Powerpipe CLI output: ${error.message}. Command: ${cmd}`);
-      }
-      
-      // Re-throw other errors
-      throw error;
+      throw formatCommandError(error, cmd);
     }
   }
 }; 

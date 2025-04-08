@@ -79,4 +79,33 @@ export function executeCommand(cmd: string, options: CommandOptions = {}) {
     });
     throw new Error(`Command execution failed: ${errorMessage}. Command: ${cmd}`);
   }
+}
+
+export function formatCommandError(error: unknown, context?: string): Error {
+  // JSON parsing errors
+  if (error instanceof SyntaxError) {
+    logger.error('Failed to parse Powerpipe CLI output:', error.message);
+    return new Error(`Failed to parse Powerpipe CLI output: ${error.message}${context ? `. Command: ${context}` : ''}`);
+  }
+
+  // Command execution errors
+  if (error instanceof Error && 'stderr' in error) {
+    const cmdError = error as CommandError;
+    const details = [
+      cmdError.stderr && `Error: ${cmdError.stderr}`,
+      cmdError.code && `Exit code: ${cmdError.code}`,
+      cmdError.signal && `Signal: ${cmdError.signal}`,
+      cmdError.cmd && `Command: ${cmdError.cmd}`
+    ].filter(Boolean).join('\n');
+
+    return new Error(`Failed to run Powerpipe CLI:\n${details}`);
+  }
+
+  // Re-throw other errors as is
+  if (error instanceof Error) {
+    return error;
+  }
+
+  // Convert unknown errors to Error instances
+  return new Error(String(error));
 } 

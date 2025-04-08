@@ -1,7 +1,8 @@
-import { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { logger } from "../services/logger.js";
+import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand } from "../utils/command.js";
+import { executeCommand, formatCommandError } from "../utils/command.js";
+import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
+import { logger } from "../services/logger.js";
 
 export interface DetectionRunParams {
   qualified_name: string;
@@ -38,12 +39,8 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = `powerpipe detection run ${params.qualified_name} --output json --mod-location "${modDirectory}"`;
-
-    const env = {
-      ...process.env,
-      POWERPIPE_MOD_LOCATION: modDirectory
-    };
+    const cmd = buildPowerpipeCommand(`detection run ${params.qualified_name}`, modDirectory, { output: 'json' });
+    const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
@@ -61,14 +58,7 @@ export const tool: Tool = {
         }]
       };
     } catch (error) {
-      // JSON parsing errors
-      if (error instanceof SyntaxError) {
-        logger.error('Failed to parse Powerpipe CLI output:', error.message);
-        throw new Error(`Failed to parse Powerpipe CLI output: ${error.message}. Command: ${cmd}`);
-      }
-      
-      // Re-throw other errors
-      throw error;
+      throw formatCommandError(error, cmd);
     }
   }
 }; 
