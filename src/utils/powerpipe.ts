@@ -13,11 +13,6 @@ export function buildPowerpipeCommand(command: string, modLocation: string, opti
   // Add the command
   parts.push(command);
 
-  // Only add --no-update-check for subcommands (not for global flags like --version)
-  if (!command.startsWith('--')) {
-    parts.push('--no-update-check');
-  }
-
   // Add mod location if provided
   if (modLocation) {
     parts.push(`--mod-location "${modLocation}"`);
