@@ -1,22 +1,24 @@
-import { ListResourcesRequestSchema, ReadResourceRequestSchema, type ReadResourceRequest, type ServerResult } from "@modelcontextprotocol/sdk/types.js";
+import { ListResourcesRequestSchema, ReadResourceRequestSchema, type ReadResourceRequest, type ServerResult, type Resource } from "@modelcontextprotocol/sdk/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { handleStatusResource } from "./status.js";
 import { logger } from '../services/logger.js';
+
+// Export all resources for server capabilities
+export const resources = {
+  status: {
+    uri: "powerpipe://status",
+    name: "status",
+    type: "Status",
+    description: "Server status information"
+  }
+} as const;
 
 export function setupResourceHandlers(server: Server) {
   // Add resources/list handler
   server.setRequestHandler(ListResourcesRequestSchema, async () => {
     try {
-      // Always include status resource
       return { 
-        resources: [
-          {
-            uri: "powerpipe://status",
-            name: "status",
-            type: "Status",
-            description: "Server status information"
-          }
-        ],
+        resources: Object.values(resources),
         _meta: {}
       };
     } catch (error) {
@@ -29,14 +31,7 @@ export function setupResourceHandlers(server: Server) {
       
       // Provide at least the status resource
       return { 
-        resources: [
-          {
-            uri: "powerpipe://status",
-            name: "status",
-            type: "Status",
-            description: "Server status information"
-          }
-        ],
+        resources: Object.values(resources),
         _meta: {}
       };
     }
