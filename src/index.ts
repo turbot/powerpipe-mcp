@@ -7,6 +7,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { setupTools, tools } from "./tools/index.js";
 import { setupPrompts, prompts } from "./prompts/index.js";
 import { setupResourceHandlers, resources } from "./resources/index.js";
+import { setupResourceTemplates, resourceTemplates } from "./resourceTemplates/index.js";
 
 const logger = new Logger();
 
@@ -27,7 +28,8 @@ const server = new Server(
     capabilities: {
       tools,
       prompts,
-      resources
+      resources,
+      resourceTemplates
     }
   }
 );
@@ -36,6 +38,7 @@ const server = new Server(
 setupTools(server);
 setupPrompts(server);
 setupResourceHandlers(server);
+setupResourceTemplates(server);
 
 // Start server
 async function startServer() {
