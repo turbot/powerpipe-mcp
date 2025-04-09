@@ -5,8 +5,7 @@ import { Logger } from "./services/logger.js";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { setupTools, tools } from "./tools/index.js";
-import { BEST_PRACTICES_PROMPT } from "./prompts/bestPractices.js";
-import { setupPrompts } from "./prompts/index.js";
+import { setupPrompts, prompts } from "./prompts/index.js";
 import { setupResourceHandlers } from "./resources/index.js";
 
 const logger = new Logger();
@@ -27,9 +26,7 @@ const server = new Server(
   {
     capabilities: {
       tools,
-      prompts: {
-        best_practices: BEST_PRACTICES_PROMPT,
-      },
+      prompts,
       resources: {}
     }
   }
