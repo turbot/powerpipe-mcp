@@ -60,19 +60,18 @@ The server provides several tools for interacting with your benchmarks and contr
 - `variable_list` - List all available Powerpipe variables
 - `variable_show` - Get detailed information about a specific variable
 
-### Resource Templates
+### Resources
 
-The Powerpipe MCP includes resource templates that define how to interact with different types of resources. Currently supported resource types:
+The Powerpipe MCP server provides access to the following resources:
 
-#### Benchmark
-- Represents a Powerpipe benchmark definition
-- Contains controls, metadata, and compliance requirements
+#### Status
+- URI: `powerpipe://status`
+- Provides server status information including:
+  - Powerpipe version
+  - Server version
+  - Server start time
 
-#### Control
-- Represents a Powerpipe control
-- Contains queries, expected results, and remediation steps
-
-Resource templates enable structured access to Powerpipe's compliance data, making it easier for AI tools to understand and help manage your cloud security posture.
+Resources enable structured access to Powerpipe's system information and status.
 
 ## Installation
 
