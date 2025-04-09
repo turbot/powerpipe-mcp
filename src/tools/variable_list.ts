@@ -57,7 +57,7 @@ export const tool: Tool = {
       const variables = parseVariables(output);
       return formatResult(variables, cmd);
     } catch (error) {
-      throw formatCommandError(error, cmd);
+      return formatCommandError(error, cmd);
     }
   }
 }; 

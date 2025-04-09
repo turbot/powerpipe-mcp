@@ -81,15 +81,16 @@ export function executeCommand(cmd: string, options: CommandOptions = {}) {
   }
 }
 
-export function formatCommandError(error: unknown, context?: string): Error {
+export function formatCommandError(error: unknown, context?: string): { isError: true; content: { type: "text"; text: string }[] } {
+  let errorMessage: string;
+
   // JSON parsing errors
   if (error instanceof SyntaxError) {
     logger.error('Failed to parse Powerpipe CLI output:', error.message);
-    return new Error(`Failed to parse Powerpipe CLI output: ${error.message}${context ? `. Command: ${context}` : ''}`);
+    errorMessage = `Failed to parse Powerpipe CLI output: ${error.message}${context ? `. Command: ${context}` : ''}`;
   }
-
   // Command execution errors
-  if (error instanceof Error && 'stderr' in error) {
+  else if (error instanceof Error && 'stderr' in error) {
     const cmdError = error as CommandError;
     const details = [
       cmdError.stderr && `Error: ${cmdError.stderr}`,
@@ -98,14 +99,22 @@ export function formatCommandError(error: unknown, context?: string): Error {
       cmdError.cmd && `Command: ${cmdError.cmd}`
     ].filter(Boolean).join('\n');
 
-    return new Error(`Failed to run Powerpipe CLI:\n${details}`);
+    errorMessage = `Failed to run Powerpipe CLI:\n${details}`;
+  }
+  // Other Error instances
+  else if (error instanceof Error) {
+    errorMessage = error.message;
+  }
+  // Unknown errors
+  else {
+    errorMessage = String(error);
   }
 
-  // Re-throw other errors as is
-  if (error instanceof Error) {
-    return error;
-  }
-
-  // Convert unknown errors to Error instances
-  return new Error(String(error));
+  return {
+    isError: true,
+    content: [{
+      type: "text",
+      text: errorMessage
+    }]
+  };
 } 

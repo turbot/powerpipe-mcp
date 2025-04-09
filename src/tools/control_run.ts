@@ -58,7 +58,7 @@ export const tool: Tool = {
         }]
       };
     } catch (error) {
-      throw formatCommandError(error, cmd);
+      return formatCommandError(error, cmd);
     }
   }
 }; 

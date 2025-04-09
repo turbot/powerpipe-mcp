@@ -59,7 +59,7 @@ export const tool: Tool = {
       const controls = parseControls(output);
       return formatResult(controls, cmd);
     } catch (error) {
-      throw formatCommandError(error, cmd);
+      return formatCommandError(error, cmd);
     }
   }
 }; 

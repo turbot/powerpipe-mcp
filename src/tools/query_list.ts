@@ -57,7 +57,7 @@ export const tool: Tool = {
       const queries = parseQueries(output);
       return formatResult(queries, cmd);
     } catch (error) {
-      throw formatCommandError(error, cmd);
+      return formatCommandError(error, cmd);
     }
   }
 }; 

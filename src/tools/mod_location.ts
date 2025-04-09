@@ -1,19 +1,22 @@
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
+import { formatCommandError } from "../utils/command.js";
 import * as path from 'path';
 
 interface ModLocationParams {
   location?: string;
 }
 
-function validateParams(args: unknown): ModLocationParams {
+type ValidationResult = ModLocationParams | ReturnType<typeof formatCommandError>;
+
+function validateParams(args: unknown): ValidationResult {
   if (!args || typeof args !== 'object') {
     return {}; // No args means "get" operation
   }
 
   const params = args as Partial<ModLocationParams>;
   if (params.location && typeof params.location !== 'string') {
-    throw new Error("If provided, location must be a string");
+    return formatCommandError(new Error("If provided, location must be a string"));
   }
 
   return params;
@@ -34,6 +37,10 @@ export const tool: Tool = {
   },
   handler: async (args: unknown) => {
     const params = validateParams(args);
+    if ('isError' in params) {
+      return params;
+    }
+
     const config = ConfigurationService.getInstance();
 
     // Get operation
@@ -49,7 +56,7 @@ export const tool: Tool = {
     // Set operation
     const resolvedLocation = path.resolve(params.location);
     if (!config.setModLocation(resolvedLocation)) {
-      throw new Error(`Failed to set mod location to: ${resolvedLocation}`);
+      return formatCommandError(new Error(`Failed to set mod location to: ${resolvedLocation}`));
     }
 
     return {

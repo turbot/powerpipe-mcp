@@ -59,7 +59,7 @@ export const tool: Tool = {
       const benchmarks = parseBenchmarks(output);
       return formatResult(benchmarks, cmd);
     } catch (error) {
-      throw formatCommandError(error, cmd);
+      return formatCommandError(error, cmd);
     }
   }
 }; 

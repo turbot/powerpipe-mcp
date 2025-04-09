@@ -46,6 +46,16 @@ export async function handleStatusResource(uri: string): Promise<ResourceRespons
       _meta: {}
     };
   } catch (error) {
-    throw formatCommandError(error);
+    const errorResult = formatCommandError(error);
+    return {
+      contents: [{
+        uri,
+        mimeType: "application/json",
+        text: JSON.stringify({
+          error: errorResult.content[0].text
+        }, null, 2)
+      }],
+      _meta: {}
+    };
   }
 }

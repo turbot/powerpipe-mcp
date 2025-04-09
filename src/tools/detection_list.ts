@@ -57,7 +57,7 @@ export const tool: Tool = {
       const detections = parseDetections(output);
       return formatResult(detections, cmd);
     } catch (error) {
-      throw formatCommandError(error, cmd);
+      return formatCommandError(error, cmd);
     }
   }
 }; 
