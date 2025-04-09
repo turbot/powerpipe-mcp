@@ -28,22 +28,37 @@ Connects directly to your Powerpipe installation, giving you AI access to your c
 
 The server provides several tools for interacting with your benchmarks and controls:
 
-#### Control Tools
-- List available controls
-- Get control details and status
-- Run controls on-demand
-- Analyze control results
+#### Most Frequently Used Operations
 
-#### Benchmark Tools
-- List available benchmarks
-- Get benchmark details
-- View benchmark compliance status
-- Get remediation suggestions
+##### Benchmark Tools
+- `benchmark_list` - List all available Powerpipe benchmarks
+- `benchmark_show` - Get detailed information about a specific benchmark
+- `benchmark_run` - Run a specific benchmark
 
-#### Configuration Tools
-- Set working directory for Powerpipe mods
-- Get current working directory
-- Reset to default working directory
+##### Control Tools
+- `control_list` - List all available Powerpipe controls
+- `control_show` - Get detailed information about a specific control
+- `control_run` - Run a specific control
+
+#### Secondary Operations
+
+##### Detection Tools
+- `detection_list` - List all available Powerpipe detections
+- `detection_show` - Get detailed information about a specific detection
+- `detection_run` - Run a specific detection
+
+##### Query Tools
+- `query_list` - List all available Powerpipe queries
+- `query_show` - Get detailed information about a specific query
+
+#### Configuration & Utilities
+
+##### Mod Tools
+- `mod_location` - Get or set the Powerpipe mod location
+
+##### Variable Tools
+- `variable_list` - List all available Powerpipe variables
+- `variable_show` - Get detailed information about a specific variable
 
 ### Resource Templates
 
