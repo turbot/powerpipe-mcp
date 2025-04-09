@@ -2,6 +2,7 @@ import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
 import { formatCommandError } from "../utils/command.js";
 import * as path from 'path';
+import * as fs from 'fs';
 
 interface ModLocationParams {
   location?: string;
@@ -55,6 +56,21 @@ export const tool: Tool = {
 
     // Set operation
     const resolvedLocation = path.resolve(params.location);
+    
+    // Check if directory exists
+    try {
+      const stats = fs.statSync(resolvedLocation);
+      if (!stats.isDirectory()) {
+        return formatCommandError(new Error(`Path exists but is not a directory: ${resolvedLocation}`));
+      }
+    } catch (error) {
+      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+        return formatCommandError(new Error(`Directory does not exist: ${resolvedLocation}`));
+      }
+      // Other file system errors
+      return formatCommandError(error);
+    }
+
     if (!config.setModLocation(resolvedLocation)) {
       return formatCommandError(new Error(`Failed to set mod location to: ${resolvedLocation}`));
     }
