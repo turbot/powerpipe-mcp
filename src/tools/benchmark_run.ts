@@ -39,18 +39,17 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = buildPowerpipeCommand(`benchmark run ${params.qualified_name}`, modDirectory, { output: 'json' });
+    const cmd = buildPowerpipeCommand(`benchmark run ${params.qualified_name}`, modDirectory, { output: 'pps' });
     const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
-      const result = JSON.parse(output);
       
       return {
         content: [{
           type: "text",
           text: JSON.stringify({
-            result,
+            output,
             debug: {
               command: cmd
             }
