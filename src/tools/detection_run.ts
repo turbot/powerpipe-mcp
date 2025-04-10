@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, CommandError } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -44,22 +44,6 @@ export const tool: Tool = {
 
     try {
       const output = executeCommand(cmd, { env });
-      
-      // Try to parse the JSON to validate it
-      try {
-        JSON.parse(output);
-      } catch (parseError) {
-        logger.error('Failed to parse detection output:', parseError);
-        return {
-          isError: true,
-          content: [{
-            type: "text",
-            text: `Invalid JSON output from detection run:\n${output}`
-          }]
-        };
-      }
-
-      // If JSON is valid, return it directly
       return {
         content: [{
           type: "text",
@@ -67,6 +51,24 @@ export const tool: Tool = {
         }]
       };
     } catch (error) {
+      // If we have stdout, return it as valid output even if command failed
+      if (error instanceof Error && 'stdout' in error) {
+        const cmdError = error as CommandError;
+        if (cmdError.stdout) {
+          try {
+            // Validate it's JSON
+            JSON.parse(cmdError.stdout);
+            return {
+              content: [{
+                type: "text",
+                text: cmdError.stdout
+              }]
+            };
+          } catch (parseError) {
+            logger.error('Failed to parse detection output:', parseError);
+          }
+        }
+      }
       return formatCommandError(error, cmd);
     }
   }
