@@ -22,6 +22,11 @@ import { tool as variableListTool } from './variable_list.js';
 import { tool as variableShowTool } from './variable_show.js';
 import { tool as docsHclTool } from './docs_hcl.js';
 
+// Powerpipe
+import { tool as dashboard_list } from "./dashboard_list.js";
+import { tool as dashboard_show } from "./dashboard_show.js";
+import { tool as dashboard_run } from "./dashboard_run.js";
+
 // Export all tools for server capabilities
 export const tools = {
   // Most Frequently Used Operations
@@ -47,7 +52,12 @@ export const tools = {
   variable_show: variableShowTool,
 
   // Documentation
-  docs_hcl: docsHclTool               // HCL documentation lookup
+  docs_hcl: docsHclTool,               // HCL documentation lookup
+
+  // Powerpipe
+  dashboard_list,
+  dashboard_show,
+  dashboard_run
 };
 
 // Initialize tool handlers
