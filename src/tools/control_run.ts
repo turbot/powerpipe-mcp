@@ -21,37 +21,6 @@ function validateParams(args: unknown): ControlRunParams {
   return params as ControlRunParams;
 }
 
-interface PanelError {
-  name: string;
-  title: string;
-  error: string;
-}
-
-function extractPanelErrors(output: string): PanelError[] {
-  try {
-    const result = JSON.parse(output);
-    const errors: PanelError[] = [];
-    
-    // Check each panel for errors
-    if (result.panels) {
-      for (const [name, panel] of Object.entries<any>(result.panels)) {
-        if (panel.error) {
-          errors.push({
-            name,
-            title: panel.title || name,
-            error: panel.error
-          });
-        }
-      }
-    }
-    
-    return errors;
-  } catch (e) {
-    logger.error('Failed to parse PPS output:', e);
-    return [];
-  }
-}
-
 export const tool: Tool = {
   name: "control_run",
   description: "Run a Powerpipe control by its qualified name",
@@ -70,37 +39,31 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = buildPowerpipeCommand(`control run ${params.qualified_name}`, modDirectory, { output: 'pps' });
+    const cmd = buildPowerpipeCommand(`control run ${params.qualified_name}`, modDirectory, { output: 'json' });
     const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
       
-      // Check for panel errors in the PPS output
-      const panelErrors = extractPanelErrors(output);
-      if (panelErrors.length > 0) {
-        const errorMessages = panelErrors.map(err => 
-          `Error in panel "${err.title}":\n${err.error}`
-        ).join('\n\n');
-        
+      // Try to parse the JSON to validate it
+      try {
+        JSON.parse(output);
+      } catch (parseError) {
+        logger.error('Failed to parse control output:', parseError);
         return {
           isError: true,
           content: [{
             type: "text",
-            text: errorMessages
+            text: `Invalid JSON output from control run:\n${output}`
           }]
         };
       }
-      
+
+      // If JSON is valid, return it directly
       return {
         content: [{
           type: "text",
-          text: JSON.stringify({
-            output,
-            debug: {
-              command: cmd
-            }
-          }, null, 2)
+          text: output
         }]
       };
     } catch (error) {
