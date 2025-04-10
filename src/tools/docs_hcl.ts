@@ -4,7 +4,43 @@ import { logger } from "../services/logger.js";
 import https from 'https';
 
 interface DocsHclParams {
-  element: string;
+  element?: string;
+}
+
+const AVAILABLE_ELEMENTS = [
+  'benchmark',
+  'card',
+  'category',
+  'chart',
+  'container',
+  'control',
+  'dashboard',
+  'detection',
+  'edge',
+  'flow',
+  'functions',
+  'graph',
+  'hierarchy',
+  'image',
+  'input',
+  'locals',
+  'mod',
+  'node',
+  'query',
+  'table',
+  'text',
+  'variable',
+  'with'
+];
+
+function generateOverview(): string {
+  return `# Powerpipe HCL Elements
+
+Powerpipe uses HCL (HashiCorp Configuration Language) to define its configuration. The following elements are available:
+
+${AVAILABLE_ELEMENTS.map(element => `- \`${element}\` - View detailed documentation with \`element: "${element}"\``).join('\n')}
+
+Use this tool with a specific element name to view its detailed documentation.`;
 }
 
 function validateParams(args: unknown): DocsHclParams {
@@ -13,8 +49,15 @@ function validateParams(args: unknown): DocsHclParams {
   }
 
   const params = args as Partial<DocsHclParams>;
-  if (!params.element || typeof params.element !== 'string') {
-    throw new Error('element is required and must be a string');
+  
+  // Element is optional
+  if (params.element !== undefined) {
+    if (typeof params.element !== 'string') {
+      throw new Error('If provided, element must be a string');
+    }
+    if (!AVAILABLE_ELEMENTS.includes(params.element)) {
+      throw new Error(`Invalid element: ${params.element}. Must be one of: ${AVAILABLE_ELEMENTS.join(', ')}`);
+    }
   }
 
   return params as DocsHclParams;
@@ -57,17 +100,20 @@ export const tool: Tool = {
     properties: {
       element: {
         type: "string",
-        description: "The element name to get documentation for (e.g. benchmark, control, query, dashboard, chart)"
+        description: "The element name to get documentation for. If not provided, returns an overview of available elements.",
+        enum: AVAILABLE_ELEMENTS
       }
     },
-    required: ["element"],
     additionalProperties: false
   },
   handler: async (args: unknown) => {
     const params = validateParams(args);
 
     try {
-      const docs = await fetchDocs(params.element);
+      const docs = params.element ? 
+        await fetchDocs(params.element) : 
+        generateOverview();
+
       return {
         content: [{
           type: "text",
