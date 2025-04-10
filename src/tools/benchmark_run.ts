@@ -21,6 +21,37 @@ function validateParams(args: unknown): BenchmarkRunParams {
   return params as BenchmarkRunParams;
 }
 
+interface PanelError {
+  name: string;
+  title: string;
+  error: string;
+}
+
+function extractPanelErrors(output: string): PanelError[] {
+  try {
+    const result = JSON.parse(output);
+    const errors: PanelError[] = [];
+    
+    // Check each panel for errors
+    if (result.panels) {
+      for (const [name, panel] of Object.entries<any>(result.panels)) {
+        if (panel.error) {
+          errors.push({
+            name,
+            title: panel.title || name,
+            error: panel.error
+          });
+        }
+      }
+    }
+    
+    return errors;
+  } catch (e) {
+    logger.error('Failed to parse PPS output:', e);
+    return [];
+  }
+}
+
 export const tool: Tool = {
   name: "benchmark_run",
   description: "Run a specific Powerpipe benchmark",
@@ -44,6 +75,22 @@ export const tool: Tool = {
 
     try {
       const output = executeCommand(cmd, { env });
+      
+      // Check for panel errors in the PPS output
+      const panelErrors = extractPanelErrors(output);
+      if (panelErrors.length > 0) {
+        const errorMessages = panelErrors.map(err => 
+          `Error in panel "${err.title}":\n${err.error}`
+        ).join('\n\n');
+        
+        return {
+          isError: true,
+          content: [{
+            type: "text",
+            text: errorMessages
+          }]
+        };
+      }
       
       return {
         content: [{
