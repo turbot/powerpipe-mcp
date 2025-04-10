@@ -47,7 +47,12 @@ export const tool: Tool = {
       return {
         content: [{
           type: "text",
-          text: output
+          text: JSON.stringify({
+            output: JSON.parse(output),
+            debug: {
+              command: cmd
+            }
+          }, null, 2)
         }]
       };
     } catch (error) {
@@ -57,11 +62,16 @@ export const tool: Tool = {
         if (cmdError.stdout) {
           try {
             // Validate it's JSON
-            JSON.parse(cmdError.stdout);
+            const parsed = JSON.parse(cmdError.stdout);
             return {
               content: [{
                 type: "text",
-                text: cmdError.stdout
+                text: JSON.stringify({
+                  output: parsed,
+                  debug: {
+                    command: cmd
+                  }
+                }, null, 2)
               }]
             };
           } catch (parseError) {
