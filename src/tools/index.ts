@@ -20,6 +20,7 @@ import { tool as queryShowTool } from './query_show.js';
 import { tool as modLocationTool } from './mod_location.js';
 import { tool as variableListTool } from './variable_list.js';
 import { tool as variableShowTool } from './variable_show.js';
+import { tool as docsHclTool } from './docs_hcl.js';
 
 // Export all tools for server capabilities
 export const tools = {
@@ -43,7 +44,10 @@ export const tools = {
   // Configuration & Utilities
   mod_location: modLocationTool,       // Usually set once and rarely changed
   variable_list: variableListTool,     // Supporting operations
-  variable_show: variableShowTool
+  variable_show: variableShowTool,
+
+  // Documentation
+  docs_hcl: docsHclTool               // HCL documentation lookup
 };
 
 // Initialize tool handlers
