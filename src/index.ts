@@ -8,8 +8,16 @@ import { setupTools, tools } from "./tools/index.js";
 import { setupPrompts, prompts } from "./prompts/index.js";
 import { setupResourceHandlers, resources } from "./resources/index.js";
 import { setupResourceTemplates, resourceTemplates } from "./resourceTemplates/index.js";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
 const logger = new Logger();
+
+// Read package.json for server metadata
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageJson = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'));
 
 // Initialize configuration
 const config = ConfigurationService.getInstance();
@@ -19,10 +27,10 @@ config.parseCommandLineArgs(process.argv);
 const server = new Server(
   {
     name: "powerpipe",
-    version: "0.1.0",
-    description: "Work with Powerpipe benchmarks and controls for cloud security and compliance.",
-    vendor: "Turbot",
-    homepage: "https://github.com/turbot/powerpipe-mcp",
+    version: packageJson.version,
+    description: packageJson.description,
+    vendor: packageJson.author,
+    homepage: packageJson.homepage,
   },
   {
     capabilities: {
