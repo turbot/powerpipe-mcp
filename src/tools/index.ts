@@ -18,6 +18,7 @@ import { tool as queryShowTool } from './powerpipe_query_show.js';
 
 // Configuration & Utilities
 import { tool as modLocationTool } from './powerpipe_mod_location.js';
+import { tool as modListTool } from './powerpipe_mod_list.js';
 import { tool as variableListTool } from './powerpipe_variable_list.js';
 import { tool as variableShowTool } from './powerpipe_variable_show.js';
 import { tool as docsHclTool } from './powerpipe_docs_hcl.js';
@@ -48,6 +49,7 @@ export const tools = {
 
   // Configuration & Utilities
   powerpipe_mod_location: modLocationTool,       // Usually set once and rarely changed
+  powerpipe_mod_list: modListTool,              // List available mods
   powerpipe_variable_list: variableListTool,     // Supporting operations
   powerpipe_variable_show: variableShowTool,
 

@@ -41,7 +41,7 @@ function formatResult(mods: Mod[], cmd: string) {
 }
 
 export const tool: Tool = {
-  name: "mod_list",
+  name: "powerpipe_mod_list",
   description: "List all available Powerpipe mods",
   inputSchema: {
     type: "object",
