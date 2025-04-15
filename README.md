@@ -99,120 +99,177 @@ This resource enables AI tools to check and verify the Powerpipe environment sta
 
 ## Installation
 
-### Prerequisites
+### Claude Desktop
 
-- Node.js 18+
-- npm or yarn
-- Powerpipe CLI installed and configured
+[How to use MCP servers with Claude Desktop →](https://modelcontextprotocol.io/quickstart/user)
 
-### Install from npm
-
-```bash
-npm install @turbot/powerpipe-mcp
-```
-
-### Configuration
-
-Add to your `.mcpconfig.json`:
+Add the following configuration to the "mcpServers" section of your `claude_desktop_config.json`:
 
 ```json
 {
-  "powerpipe": {
-    "name": "Powerpipe",
-    "description": "Work with Powerpipe benchmarks and controls",
-    "server": "github:turbot/powerpipe-mcp"
+  "mcpServers": {
+    "powerpipe": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "github:turbot/powerpipe-mcp"
+      ]
+    }
   }
 }
 ```
 
-You can optionally specify a working directory for your Powerpipe mods:
+If you want to specify a custom mod location, you can add it as an additional argument:
 
 ```json
 {
-  "powerpipe": {
-    "name": "Powerpipe",
-    "description": "Work with Powerpipe benchmarks and controls",
-    "server": "github:turbot/powerpipe-mcp",
-    "args": ["--mod-location", "/path/to/your/mods"]
+  "mcpServers": {
+    "powerpipe": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "github:turbot/powerpipe-mcp",
+        "--mod-location",
+        "/path/to/your/mods"
+      ]
+    }
   }
 }
 ```
 
-### Cursor Installation
+### Cursor
 
 To install the Powerpipe MCP server in Cursor:
 
-1. Install the MCP plugin in Cursor
+1. Open your Cursor MCP configuration file:
+   ```sh
+   open ~/.cursor/mcp.json  # On macOS
+   # or
+   code ~/.cursor/mcp.json  # Using VS Code
+   ```
 
 2. Add the following configuration:
+   ```json
+   {
+     "mcpServers": {
+       "powerpipe": {
+         "name": "Powerpipe",
+         "description": "Work with Powerpipe benchmarks and controls",
+         "server": "github:turbot/powerpipe-mcp"
+       }
+     }
+   }
+   ```
 
-```json
-{
-  "powerpipe": {
-    "name": "Powerpipe",
-    "description": "Work with Powerpipe benchmarks and controls",
-    "server": "github:turbot/powerpipe-mcp"
-  }
-}
-```
+   Alternatively, if you want to specify a custom mod location:
+   ```json
+   {
+     "mcpServers": {
+       "powerpipe": {
+         "name": "Powerpipe",
+         "description": "Work with Powerpipe benchmarks and controls",
+         "server": "github:turbot/powerpipe-mcp",
+         "args": ["--mod-location", "/path/to/your/mods"]
+       }
+     }
+   }
+   ```
 
-3. Restart Cursor
+3. Save the configuration file and restart Cursor for the changes to take effect.
 
 4. The Powerpipe MCP server will now be available in your Cursor environment.
 
-## Usage
-
-### Working Directory Configuration
-
-The Powerpipe MCP server can be configured to work with mods in a specific location. There are several ways to set this:
-
-1. Environment Variable:
-```bash
-POWERPIPE_MCP_MOD_LOCATION=/path/to/mods node dist/index.js
-```
-
-2. Command Line Argument:
-```bash
-node dist/index.js --mod-location /path/to/mods
-```
-
-3. Using the Configuration Tool:
-```
-Set the mod location to /path/to/mods
-```
-
-The mod location can be changed at any time during operation using the configuration tools.
+## Prompting Guide
 
 ### Best Practices
 
 The Powerpipe MCP includes a pre-built `best_practices` prompt. Running it before running your own prompts will teach the LLM how to work most effectively with Powerpipe, including:
 
-- How to work with benchmarks and controls
-- How to interpret compliance results
-- How to suggest remediation steps
+- How to explore available benchmarks and controls using powerpipe_benchmark_list and powerpipe_control_list
+- When to use specific tools for different operations (benchmarks, controls, detections, etc.)
+- How to interpret compliance results and suggest remediation steps
+- Best practices for working with mod locations and variables
+
+In Claude Desktop, you can load this prompt through the plug icon in the prompt window.
 
 ### Example Prompts
 
-Each prompt below is designed to work with Powerpipe's benchmarking capabilities:
+Each prompt below is designed to work with Powerpipe's various components:
 
 ```
-Show me all controls that failed in the CIS AWS Benchmark.
-
-List controls related to S3 bucket encryption.
-
-What remediation steps are suggested for non-compliant IAM password policies?
-
-Set the mod location to /path/to/my/custom/mods
+List all available benchmarks
 ```
 
-### Writing Good Prompts
+```
+Show me details about the CIS AWS Benchmark
+```
 
-When writing prompts:
+```
+Find all controls related to S3 bucket encryption
+```
 
-- Be specific about what compliance aspects you want to check
-- Reference specific benchmarks or control categories
-- Include context about your compliance requirements
-- Specify the mod location if using custom mods
+```
+Run the AWS security benchmark and analyze the results
+```
+
+Remember to:
+- Ask about specific benchmarks, controls, or compliance areas
+- Be clear about which frameworks or standards you're interested in
+- Start with simple questions about one component
+- Add more complexity or conditions after seeing the initial results
+
+Claude will:
+- Choose the appropriate Powerpipe tools for your request
+- Run benchmarks and controls as needed
+- Format the results in a clear, readable way
+- Provide insights and remediation suggestions based on the findings
+
+## Local Development
+
+To set up the project for local development:
+
+1. Clone the repository and navigate to the directory:
+```sh
+git clone https://github.com/turbot/powerpipe-mcp.git
+cd powerpipe-mcp
+```
+
+2. Install dependencies:
+```sh
+npm install
+```
+
+3. Build the project:
+```sh
+npm run build
+```
+
+4. For development with auto-recompilation:
+```sh
+npm run watch
+```
+
+5. To run the server:
+```sh
+# Run with default mod location
+node dist/index.js
+
+# Run with custom mod location
+node dist/index.js --mod-location /path/to/your/mods
+```
+
+6. To test:
+```sh
+npm test
+```
+
+## Environment Variables
+
+The following environment variables can be used to configure the Powerpipe MCP server:
+
+- `POWERPIPE_MCP_MOD_LOCATION`: Set the mod location for Powerpipe
+- `POWERPIPE_MCP_LOG_LEVEL`: Set the logging level (debug, info, warn, error)
+- `POWERPIPE_MCP_PORT`: Set the server port (default: 7891)
 
 ## Development
 
