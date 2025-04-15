@@ -112,25 +112,8 @@ Add the following configuration to the "mcpServers" section of your `claude_desk
       "command": "npx",
       "args": [
         "-y",
-        "github:turbot/powerpipe-mcp"
-      ]
-    }
-  }
-}
-```
-
-If you want to specify a custom mod location, you can add it as an additional argument:
-
-```json
-{
-  "mcpServers": {
-    "powerpipe": {
-      "command": "npx",
-      "args": [
-        "-y",
         "github:turbot/powerpipe-mcp",
-        "--mod-location",
-        "/path/to/your/mods"
+        "/path/to/your/mods"  # Required: Path to your Powerpipe mods directory
       ]
     }
   }
@@ -155,21 +138,8 @@ To install the Powerpipe MCP server in Cursor:
        "powerpipe": {
          "name": "Powerpipe",
          "description": "Work with Powerpipe benchmarks and controls",
-         "server": "github:turbot/powerpipe-mcp"
-       }
-     }
-   }
-   ```
-
-   Alternatively, if you want to specify a custom mod location:
-   ```json
-   {
-     "mcpServers": {
-       "powerpipe": {
-         "name": "Powerpipe",
-         "description": "Work with Powerpipe benchmarks and controls",
          "server": "github:turbot/powerpipe-mcp",
-         "args": ["--mod-location", "/path/to/your/mods"]
+         "args": ["/path/to/your/mods"]  # Required: Path to your Powerpipe mods directory
        }
      }
    }
@@ -178,6 +148,12 @@ To install the Powerpipe MCP server in Cursor:
 3. Save the configuration file and restart Cursor for the changes to take effect.
 
 4. The Powerpipe MCP server will now be available in your Cursor environment.
+
+5. To run the server:
+```sh
+# The mod location argument is required
+node dist/index.js /path/to/your/mods
+```
 
 ## Prompting Guide
 
@@ -255,7 +231,7 @@ npm run watch
 node dist/index.js
 
 # Run with custom mod location
-node dist/index.js --mod-location /path/to/your/mods
+node dist/index.js /path/to/your/mods
 ```
 
 6. To test:
@@ -300,7 +276,7 @@ node dist/index.js
 
 With custom mod location:
 ```bash
-node dist/index.js --mod-location /path/to/mods
+node dist/index.js /path/to/your/mods
 ```
 
 ### Environment Variables
