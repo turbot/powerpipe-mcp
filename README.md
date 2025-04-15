@@ -161,16 +161,6 @@ The mod location argument is required and must point to a directory containing y
 
 Save the configuration file and restart Cursor for the changes to take effect.
 
-### Direct Usage
-
-To run the server directly:
-
-```sh
-npx @turbot/powerpipe-mcp /path/to/your/mod/is/required
-```
-
-The mod location argument is required and must point to a directory containing your Powerpipe mod files.
-
 ## Prompting Guide
 
 First, run the `best_practices` prompt included in the MCP server to teach your LLM how best to work with Powerpipe. Then, ask anything!
@@ -212,13 +202,6 @@ Remember to:
 - Use natural language - the LLM will handle finding the right controls and benchmarks
 - Be bold and open, it's amazing what insights the LLM will discover!
 
-The LLM will:
-- Choose the appropriate Powerpipe tools for your request
-- Run benchmarks and controls as needed
-- Format results in a clear, readable way
-- Provide insights and remediation suggestions
-- Help you understand compliance requirements and status
-
 ## Local Development
 
 To set up the project for local development:
@@ -250,7 +233,7 @@ npm run watch
 node dist/index.js
 
 # Run with custom mod location
-node dist/index.js /path/to/your/mods
+node dist/index.js /path/to/your/mod/is/required
 ```
 
 6. To test:
@@ -295,7 +278,7 @@ node dist/index.js
 
 With custom mod location:
 ```bash
-node dist/index.js /path/to/your/mods
+node dist/index.js /path/to/your/mod/is/required
 ```
 
 ### Environment Variables
