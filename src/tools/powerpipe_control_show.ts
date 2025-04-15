@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -23,7 +23,7 @@ function validateParams(args: unknown): ControlShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_control_show",
-  description: "Displays detailed information about a specific compliance control, including its implementation details, associated queries, and documentation. Use this to understand exactly how a control evaluates compliance and what data it examines. Requires the control's qualified name from control list.",
+  description: "Displays detailed information about a specific control, including its implementation, tags, and documentation. Use this to understand how a control evaluates compliance and what it checks for.",
   inputSchema: {
     type: "object",
     properties: {
@@ -45,18 +45,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const control = JSON.parse(output);
-      
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            control,
-            debug: {
-              command: cmd
-            }
-          })
-        }]
-      };
+      return formatResult({ control }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }

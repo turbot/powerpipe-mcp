@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -24,23 +24,9 @@ function parseDetections(output: string): Detection[] {
   }));
 }
 
-function formatResult(detections: Detection[], cmd: string) {
-  return {
-    content: [{
-      type: "text",
-      text: JSON.stringify({
-        detections,
-        debug: {
-          command: cmd
-        }
-      })
-    }]
-  };
-}
-
 export const tool: Tool = {
   name: "powerpipe_detection_list",
-  description: "Lists all available security and compliance detections in your configured mod directory. Detections are specialized controls focused on identifying specific security issues or compliance violations. Use this to find targeted security checks you can run.",
+  description: "List all available security detections. Use this to discover potential security issues that can be identified in your infrastructure.",
   inputSchema: {
     type: "object",
     properties: {},
@@ -55,7 +41,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const detections = parseDetections(output);
-      return formatResult(detections, cmd);
+      return formatResult({ detections }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }

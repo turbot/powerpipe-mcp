@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand } from "../utils/command.js";
+import { executeCommand, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { handlePowerpipeRunOutput } from "../utils/powerpipe_run.js";
 import { logger } from "../services/logger.js";
@@ -45,17 +45,8 @@ export const tool: Tool = {
 
     try {
       const output = executeCommand(cmd, { env });
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            output: JSON.parse(output),
-            debug: {
-              command: cmd
-            }
-          })
-        }]
-      };
+      const result = JSON.parse(output);
+      return formatResult({ result }, cmd);
     } catch (error) {
       return handlePowerpipeRunOutput(error, cmd);
     }

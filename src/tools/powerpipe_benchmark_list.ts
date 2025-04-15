@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -26,20 +26,6 @@ function parseBenchmarks(output: string): Benchmark[] {
   }));
 }
 
-function formatResult(benchmarks: Benchmark[], cmd: string) {
-  return {
-    content: [{
-      type: "text",
-      text: JSON.stringify({
-        benchmarks,
-        debug: {
-          command: cmd
-        }
-      })
-    }]
-  };
-}
-
 export const tool: Tool = {
   name: "powerpipe_benchmark_list",
   description: "Lists all available compliance benchmarks in your configured mod directory. Use this as your starting point to discover which compliance frameworks are available and get their qualified names. Each benchmark represents a complete compliance framework or standard.",
@@ -57,7 +43,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const benchmarks = parseBenchmarks(output);
-      return formatResult(benchmarks, cmd);
+      return formatResult({ benchmarks }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }

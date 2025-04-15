@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -23,7 +23,7 @@ function validateParams(args: unknown): VariableShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_variable_show",
-  description: "Displays detailed information about a specific configuration variable, including its current value, type, and documentation. Use this to understand how to configure a variable and what impact it will have on your compliance checks. Requires the variable's qualified name from variable list.",
+  description: "Displays detailed information about a specific configuration variable, including its type, default value, and documentation. Use this to understand how to customize compliance checks for your environment.",
   inputSchema: {
     type: "object",
     properties: {
@@ -45,18 +45,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const variable = JSON.parse(output);
-      
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            variable,
-            debug: {
-              command: cmd
-            }
-          })
-        }]
-      };
+      return formatResult({ variable }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }

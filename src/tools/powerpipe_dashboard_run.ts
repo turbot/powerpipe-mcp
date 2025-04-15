@@ -1,7 +1,9 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
+import { handlePowerpipeRunOutput } from "../utils/powerpipe_run.js";
+import { logger } from "../services/logger.js";
 
 interface DashboardRunParams {
   qualified_name: string;
@@ -22,7 +24,7 @@ function validateParams(args: unknown): DashboardRunParams {
 
 export const tool: Tool = {
   name: "powerpipe_dashboard_run",
-  description: "Executes a dashboard and returns its data in a JSON snapshot format. While the Powerpipe CLI can render this data visually, this tool provides the raw structured data that represents your compliance and security status. Use dashboard show first to understand the structure of the data that will be returned.",
+  description: "Executes a dashboard to get a JSON snapshot of your compliance and security status. Use dashboard show first to understand what will be included.",
   inputSchema: {
     type: "object",
     properties: {
@@ -38,25 +40,15 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = buildPowerpipeCommand(`dashboard run ${params.qualified_name}`, modDirectory, { output: 'pps' });
+    const cmd = buildPowerpipeCommand(`dashboard run ${params.qualified_name}`, modDirectory, { output: 'json' });
     const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
-      
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            output,
-            debug: {
-              command: cmd
-            }
-          })
-        }]
-      };
+      const result = JSON.parse(output);
+      return formatResult({ result }, cmd);
     } catch (error) {
-      return formatCommandError(error, cmd);
+      return handlePowerpipeRunOutput(error, cmd);
     }
   }
 }; 

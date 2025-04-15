@@ -1,6 +1,6 @@
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { formatCommandError } from "../utils/command.js";
+import { formatCommandError, formatResult } from "../utils/command.js";
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -46,12 +46,7 @@ export const tool: Tool = {
 
     // Get operation
     if (!params.location) {
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({ location: config.getModLocation() })
-        }]
-      };
+      return formatResult({ location: config.getModLocation() }, "get mod location");
     }
 
     // Set operation
@@ -60,11 +55,6 @@ export const tool: Tool = {
       return formatCommandError(new Error(result.error || `Failed to set mod location to: ${params.location}`));
     }
 
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({ location: config.getModLocation() })
-      }]
-    };
+    return formatResult({ location: config.getModLocation() }, `set mod location to ${params.location}`);
   }
 }; 

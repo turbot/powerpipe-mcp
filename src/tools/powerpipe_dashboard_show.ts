@@ -1,7 +1,8 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
+import { logger } from "../services/logger.js";
 
 interface DashboardShowParams {
   qualified_name: string;
@@ -22,7 +23,7 @@ function validateParams(args: unknown): DashboardShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_dashboard_show",
-  description: "Displays detailed information about a specific dashboard, including its layout, components, and data sources. Use this to understand what information a dashboard will display and how it's structured before running it. Requires the dashboard's qualified name from dashboard list.",
+  description: "Displays detailed information about a specific dashboard, including its components and structure. Use this to understand what insights a dashboard provides before running it.",
   inputSchema: {
     type: "object",
     properties: {
@@ -44,18 +45,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const dashboard = JSON.parse(output);
-      
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            dashboard,
-            debug: {
-              command: cmd
-            }
-          })
-        }]
-      };
+      return formatResult({ dashboard }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }

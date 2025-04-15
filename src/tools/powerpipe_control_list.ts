@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -26,23 +26,9 @@ function parseControls(output: string): Control[] {
   }));
 }
 
-function formatResult(controls: Control[], cmd: string) {
-  return {
-    content: [{
-      type: "text",
-      text: JSON.stringify({
-        controls,
-        debug: {
-          command: cmd
-        }
-      })
-    }]
-  };
-}
-
 export const tool: Tool = {
   name: "powerpipe_control_list",
-  description: "Lists all individual compliance controls available in your configured mod directory. Controls are the building blocks of benchmarks, each representing a specific compliance requirement. Use this to find controls you can run individually rather than running entire benchmarks.",
+  description: "Lists all available controls in your configured mod directory. Use this to discover individual compliance requirements and get their qualified names. Each control represents a specific compliance requirement that can be evaluated.",
   inputSchema: {
     type: "object",
     properties: {},
@@ -57,7 +43,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const controls = parseControls(output);
-      return formatResult(controls, cmd);
+      return formatResult({ controls }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }

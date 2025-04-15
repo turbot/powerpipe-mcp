@@ -117,4 +117,18 @@ export function formatCommandError(error: unknown, context?: string): { isError:
       text: errorMessage
     }]
   };
+}
+
+export function formatResult<T>(data: T, cmd: string) {
+  return {
+    content: [{
+      type: "text",
+      text: JSON.stringify({
+        ...data,
+        debug: {
+          command: cmd
+        }
+      })
+    }]
+  };
 } 

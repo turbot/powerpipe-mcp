@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -24,23 +24,9 @@ function parseQueries(output: string): Query[] {
   }));
 }
 
-function formatResult(queries: Query[], cmd: string) {
-  return {
-    content: [{
-      type: "text",
-      text: JSON.stringify({
-        queries,
-        debug: {
-          command: cmd
-        }
-      })
-    }]
-  };
-}
-
 export const tool: Tool = {
   name: "powerpipe_query_list",
-  description: "Lists all available SQL queries that power the controls and detections in your configured mod directory. Queries are the foundation of how Powerpipe evaluates your infrastructure. Use this to understand the underlying implementation of controls and detections.",
+  description: "List all available queries. Use this to discover the SQL queries that power controls and detections.",
   inputSchema: {
     type: "object",
     properties: {},
@@ -55,7 +41,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const queries = parseQueries(output);
-      return formatResult(queries, cmd);
+      return formatResult({ queries }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }

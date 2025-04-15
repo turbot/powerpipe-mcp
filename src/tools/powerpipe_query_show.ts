@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -23,7 +23,7 @@ function validateParams(args: unknown): QueryShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_query_show",
-  description: "Displays the SQL implementation and metadata for a specific query used by controls and detections. Use this to examine exactly what data is being queried and how compliance determinations are made. Requires the query's qualified name from query list.",
+  description: "Displays detailed information about a specific query, including its SQL implementation and documentation. Use this to understand how controls and detections evaluate your infrastructure.",
   inputSchema: {
     type: "object",
     properties: {
@@ -45,18 +45,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const query = JSON.parse(output);
-      
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            query,
-            debug: {
-              command: cmd
-            }
-          })
-        }]
-      };
+      return formatResult({ query }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }

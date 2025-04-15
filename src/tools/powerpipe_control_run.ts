@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand } from "../utils/command.js";
+import { executeCommand, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { handlePowerpipeRunOutput } from "../utils/powerpipe_run.js";
 import { logger } from "../services/logger.js";
@@ -24,7 +24,7 @@ function validateParams(args: unknown): ControlRunParams {
 
 export const tool: Tool = {
   name: "powerpipe_control_run",
-  description: "Executes a single compliance control to evaluate your infrastructure against a specific requirement. This is useful when you want to check compliance with a particular requirement rather than running an entire benchmark. Use control show first to understand what will be evaluated.",
+  description: "Executes a specific control to evaluate your infrastructure against a single compliance requirement. Use control show first to understand what will be evaluated.",
   inputSchema: {
     type: "object",
     properties: {
@@ -45,17 +45,8 @@ export const tool: Tool = {
 
     try {
       const output = executeCommand(cmd, { env });
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            output: JSON.parse(output),
-            debug: {
-              command: cmd
-            }
-          })
-        }]
-      };
+      const result = JSON.parse(output);
+      return formatResult({ result }, cmd);
     } catch (error) {
       return handlePowerpipeRunOutput(error, cmd);
     }

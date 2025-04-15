@@ -1,6 +1,6 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError, formatResult } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
@@ -24,23 +24,9 @@ function parseVariables(output: string): Variable[] {
   }));
 }
 
-function formatResult(variables: Variable[], cmd: string) {
-  return {
-    content: [{
-      type: "text",
-      text: JSON.stringify({
-        variables,
-        debug: {
-          command: cmd
-        }
-      })
-    }]
-  };
-}
-
 export const tool: Tool = {
   name: "powerpipe_variable_list",
-  description: "Lists all configuration variables defined in your Powerpipe mods. Variables allow customization of benchmarks, controls, and queries to match your environment and requirements. Use this to discover what aspects of your compliance checks can be customized.",
+  description: "List all available configuration variables. Use this to discover which aspects of your compliance checks can be customized.",
   inputSchema: {
     type: "object",
     properties: {},
@@ -55,7 +41,7 @@ export const tool: Tool = {
     try {
       const output = executeCommand(cmd, { env });
       const variables = parseVariables(output);
-      return formatResult(variables, cmd);
+      return formatResult({ variables }, cmd);
     } catch (error) {
       return formatCommandError(error, cmd);
     }
