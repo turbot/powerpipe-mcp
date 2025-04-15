@@ -23,57 +23,46 @@ Connects directly to your Powerpipe installation, giving you AI access to your c
 ### Tools
 
 #### Core Benchmark & Control Operations
-- **powerpipe_benchmark_list**
-  - List all available Powerpipe benchmarks
-  - No input parameters required
-  - Returns benchmark metadata including title, qualified name, documentation, and tags
+- **powerpipe_benchmark_list**, **powerpipe_benchmark_show**, **powerpipe_benchmark_run**
+  - List, view, and run Powerpipe benchmarks
+  - Input for show/run: `qualified_name` (string): The qualified name of the benchmark
+  - Returns benchmark metadata and execution results
+  - Run command handles non-zero exit codes (1-2) for alarms/errors
 
-- **powerpipe_benchmark_show**
-  - Get detailed information about a specific benchmark
-  - Input: `qualified_name` (string): The qualified name of the benchmark to show details for
-
-- **powerpipe_benchmark_run**
-  - Run a specific Powerpipe benchmark
-  - Input: `qualified_name` (string): The qualified name of the benchmark to run
-  - Returns JSON output with results, even if some controls fail (exit codes 1-2 indicate alarms/errors)
-
-- **powerpipe_control_list**
-  - List all available Powerpipe controls
-  - No input parameters required
-  - Returns control metadata including title, qualified name, documentation, and tags
-
-- **powerpipe_control_show**
-  - Get detailed information about a specific control
-  - Input: `qualified_name` (string): The qualified name of the control to show details for
-
-- **powerpipe_control_run**
-  - Run a specific Powerpipe control
-  - Input: `qualified_name` (string): The qualified name of the control to run
-  - Returns JSON output with results, even if control fails (exit codes 1-2 indicate alarms/errors)
+- **powerpipe_control_list**, **powerpipe_control_show**, **powerpipe_control_run**
+  - List, view, and run Powerpipe controls
+  - Input for show/run: `qualified_name` (string): The qualified name of the control
+  - Returns control metadata and execution results
+  - Run command handles non-zero exit codes (1-2) for alarms/errors
 
 #### Detection & Query Operations
 - **powerpipe_detection_list**, **powerpipe_detection_show**, **powerpipe_detection_run**
   - List, view, and run Powerpipe detections
-  - Similar parameters to benchmark/control operations
+  - Input for show/run: `qualified_name` (string): The qualified name of the detection
   - Used for continuous monitoring and threat detection
 
 - **powerpipe_query_list**, **powerpipe_query_show**
   - List and view Powerpipe queries
+  - Input for show: `qualified_name` (string): The qualified name of the query
   - Used to understand the underlying queries that power controls
+
+#### Dashboard Operations
+- **powerpipe_dashboard_list**, **powerpipe_dashboard_show**, **powerpipe_dashboard_run**
+  - List, view, and run Powerpipe dashboards
+  - Input for show/run: `qualified_name` (string): The qualified name of the dashboard
+  - Used for visualizing compliance and control results
+
+#### Variable Management
+- **powerpipe_variable_list**, **powerpipe_variable_show**
+  - List and view Powerpipe variables
+  - Input for show: `qualified_name` (string): The qualified name of the variable
+  - Used to understand and manage variable definitions
 
 #### Configuration & Documentation
 - **powerpipe_mod_location**
   - Get or set the Powerpipe mod location
   - Optional input: `location` (string): The location to set
   - Returns current location if no input provided
-
-- **powerpipe_variable_list**, **powerpipe_variable_show**
-  - List and view Powerpipe variables
-  - Used to understand and manage variable definitions
-
-- **powerpipe_dashboard_list**, **powerpipe_dashboard_show**, **powerpipe_dashboard_run**
-  - List, view, and run Powerpipe dashboards
-  - Used for visualizing compliance and control results
 
 - **powerpipe_docs_hcl**
   - Get HCL documentation for Powerpipe elements
