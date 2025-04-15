@@ -35,7 +35,7 @@ function formatResult(benchmarks: Benchmark[], cmd: string) {
         debug: {
           command: cmd
         }
-      }, null, 2)
+      })
     }]
   };
 }

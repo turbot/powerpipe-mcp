@@ -35,7 +35,7 @@ function formatResult(controls: Control[], cmd: string) {
         debug: {
           command: cmd
         }
-      }, null, 2)
+      })
     }]
   };
 }

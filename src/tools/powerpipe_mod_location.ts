@@ -49,7 +49,7 @@ export const tool: Tool = {
       return {
         content: [{
           type: "text",
-          text: JSON.stringify({ location: config.getModLocation() }, null, 2)
+          text: JSON.stringify({ location: config.getModLocation() })
         }]
       };
     }
@@ -78,7 +78,7 @@ export const tool: Tool = {
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ location: resolvedLocation }, null, 2)
+        text: JSON.stringify({ location: resolvedLocation })
       }]
     };
   }

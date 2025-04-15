@@ -33,7 +33,7 @@ function formatResult(detections: Detection[], cmd: string) {
         debug: {
           command: cmd
         }
-      }, null, 2)
+      })
     }]
   };
 }

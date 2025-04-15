@@ -33,7 +33,7 @@ function formatResult(queries: Query[], cmd: string) {
         debug: {
           command: cmd
         }
-      }, null, 2)
+      })
     }]
   };
 }
