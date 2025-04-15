@@ -22,7 +22,7 @@ function validateParams(args: unknown): DashboardRunParams {
 
 export const tool: Tool = {
   name: "powerpipe_dashboard_run",
-  description: "Executes and displays a dashboard that visualizes your compliance and security status. The dashboard will query your infrastructure and present the results in an organized, visual format. Use dashboard show first to understand what will be displayed.",
+  description: "Executes a dashboard and returns its data in a JSON snapshot format. While the Powerpipe CLI can render this data visually, this tool provides the raw structured data that represents your compliance and security status. Use dashboard show first to understand the structure of the data that will be returned.",
   inputSchema: {
     type: "object",
     properties: {
