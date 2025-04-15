@@ -107,6 +107,12 @@ This resource enables AI tools to check and verify the Powerpipe environment sta
 
 ## Installation
 
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v16 or higher (includes `npx`)
+- [Powerpipe](https://powerpipe.io/downloads) installed and configured
+- A directory containing your Powerpipe mod files (required)
+
 ### Claude Desktop
 
 [How to use MCP servers with Claude Desktop →](https://modelcontextprotocol.io/quickstart/user)
@@ -120,48 +126,50 @@ Add the following configuration to the "mcpServers" section of your `claude_desk
       "command": "npx",
       "args": [
         "-y",
-        "github:turbot/powerpipe-mcp",
-        "/path/to/your/mods"  # Required: Path to your Powerpipe mods directory
+        "@turbot/powerpipe-mcp",
+        "/path/to/your/mod/is/required"
       ]
     }
   }
 }
 ```
 
+The mod location argument is required and must point to a directory containing your Powerpipe mod files. This is where Powerpipe will look for benchmarks, controls, and other resources.
+
+Save the configuration file and restart Claude Desktop for the changes to take effect.
+
 ### Cursor
 
-To install the Powerpipe MCP server in Cursor:
+Open your Cursor MCP configuration file at `~/.cursor/mcp.json` and add the following configuration to the "mcpServers" section:
 
-1. Open your Cursor MCP configuration file:
-   ```sh
-   open ~/.cursor/mcp.json  # On macOS
-   # or
-   code ~/.cursor/mcp.json  # Using VS Code
-   ```
-
-2. Add the following configuration:
-   ```json
-   {
-     "mcpServers": {
-       "powerpipe": {
-         "name": "Powerpipe",
-         "description": "Work with Powerpipe benchmarks and controls",
-         "server": "github:turbot/powerpipe-mcp",
-         "args": ["/path/to/your/mods"]  # Required: Path to your Powerpipe mods directory
-       }
-     }
-   }
-   ```
-
-3. Save the configuration file and restart Cursor for the changes to take effect.
-
-4. The Powerpipe MCP server will now be available in your Cursor environment.
-
-5. To run the server:
-```sh
-# The mod location argument is required
-node dist/index.js /path/to/your/mods
+```json
+{
+  "mcpServers": {
+    "powerpipe": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@turbot/powerpipe-mcp",
+        "/path/to/your/mod/is/required"
+      ]
+    }
+  }
+}
 ```
+
+The mod location argument is required and must point to a directory containing your Powerpipe mod files. This is where Powerpipe will look for benchmarks, controls, and other resources.
+
+Save the configuration file and restart Cursor for the changes to take effect.
+
+### Direct Usage
+
+To run the server directly:
+
+```sh
+npx @turbot/powerpipe-mcp /path/to/your/mod/is/required
+```
+
+The mod location argument is required and must point to a directory containing your Powerpipe mod files.
 
 ## Prompting Guide
 
