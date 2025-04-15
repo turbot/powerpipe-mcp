@@ -18,64 +18,95 @@ Enable AI assistants like Claude to explore and work with your Powerpipe benchma
 
 Connects directly to your Powerpipe installation, giving you AI access to your cloud security and compliance benchmarking data. Powerpipe helps you assess your cloud infrastructure against security benchmarks and compliance frameworks.
 
-## Features
-
-### Prompts
-
-- Best practices for working with Powerpipe controls and benchmarks
+## Capabilities
 
 ### Tools
 
-The server provides several tools for interacting with your benchmarks and controls:
+#### Core Benchmark & Control Operations
+- **powerpipe_benchmark_list**
+  - List all available Powerpipe benchmarks
+  - No input parameters required
+  - Returns benchmark metadata including title, qualified name, documentation, and tags
 
-#### Most Frequently Used Operations
+- **powerpipe_benchmark_show**
+  - Get detailed information about a specific benchmark
+  - Input: `qualified_name` (string): The qualified name of the benchmark to show details for
 
-##### Benchmark Tools
-- `powerpipe_benchmark_list` - List all available Powerpipe benchmarks
-- `powerpipe_benchmark_show` - Get detailed information about a specific benchmark
-- `powerpipe_benchmark_run` - Run a specific benchmark
+- **powerpipe_benchmark_run**
+  - Run a specific Powerpipe benchmark
+  - Input: `qualified_name` (string): The qualified name of the benchmark to run
+  - Returns JSON output with results, even if some controls fail (exit codes 1-2 indicate alarms/errors)
 
-##### Control Tools
-- `powerpipe_control_list` - List all available Powerpipe controls
-- `powerpipe_control_show` - Get detailed information about a specific control
-- `powerpipe_control_run` - Run a specific control
+- **powerpipe_control_list**
+  - List all available Powerpipe controls
+  - No input parameters required
+  - Returns control metadata including title, qualified name, documentation, and tags
 
-#### Secondary Operations
+- **powerpipe_control_show**
+  - Get detailed information about a specific control
+  - Input: `qualified_name` (string): The qualified name of the control to show details for
 
-##### Detection Tools
-- `powerpipe_detection_list` - List all available Powerpipe detections
-- `powerpipe_detection_show` - Get detailed information about a specific detection
-- `powerpipe_detection_run` - Run a specific detection
+- **powerpipe_control_run**
+  - Run a specific Powerpipe control
+  - Input: `qualified_name` (string): The qualified name of the control to run
+  - Returns JSON output with results, even if control fails (exit codes 1-2 indicate alarms/errors)
 
-##### Query Tools
-- `powerpipe_query_list` - List all available Powerpipe queries
-- `powerpipe_query_show` - Get detailed information about a specific query
+#### Detection & Query Operations
+- **powerpipe_detection_list**, **powerpipe_detection_show**, **powerpipe_detection_run**
+  - List, view, and run Powerpipe detections
+  - Similar parameters to benchmark/control operations
+  - Used for continuous monitoring and threat detection
 
-#### Configuration & Utilities
+- **powerpipe_query_list**, **powerpipe_query_show**
+  - List and view Powerpipe queries
+  - Used to understand the underlying queries that power controls
 
-##### Mod Tools
-- `powerpipe_mod_location` - Get or set the Powerpipe mod location
+#### Configuration & Documentation
+- **powerpipe_mod_location**
+  - Get or set the Powerpipe mod location
+  - Optional input: `location` (string): The location to set
+  - Returns current location if no input provided
 
-##### Variable Tools
-- `powerpipe_variable_list` - List all available Powerpipe variables
-- `powerpipe_variable_show` - Get detailed information about a specific variable
+- **powerpipe_variable_list**, **powerpipe_variable_show**
+  - List and view Powerpipe variables
+  - Used to understand and manage variable definitions
 
-##### Dashboard Tools
-- `powerpipe_dashboard_list` - List all available Powerpipe dashboards
-- `powerpipe_dashboard_show` - Get detailed information about a specific dashboard
-- `powerpipe_dashboard_run` - Run a specific dashboard
+- **powerpipe_dashboard_list**, **powerpipe_dashboard_show**, **powerpipe_dashboard_run**
+  - List, view, and run Powerpipe dashboards
+  - Used for visualizing compliance and control results
 
-##### Documentation Tools
-The Powerpipe MCP server provides access to the following resources:
+- **powerpipe_docs_hcl**
+  - Get HCL documentation for Powerpipe elements
+  - Input: `element` (string): The element type to get documentation for
+  - Helps with understanding HCL syntax and structure
 
-#### Status
-- URI: `powerpipe://status`
-- Provides server status information including:
-  - Powerpipe version
-  - Server version
-  - Server start time
+### Prompts
 
-Resources enable structured access to Powerpipe's system information and status.
+- **best_practices**
+  - Best practices for working with Powerpipe
+  - Provides detailed guidance on:
+    - Working with benchmarks and controls
+    - Understanding compliance results
+    - Interpreting control failures
+    - Suggesting remediation steps
+    - Using mod locations effectively
+    - Managing variables and configuration
+    - Writing and organizing controls
+    - Performance considerations
+
+### Resources
+
+The Powerpipe MCP provides access to the following resources:
+
+- **status**
+  - Represents the current state of the Powerpipe server
+  - Properties include:
+    - powerpipe_version: The current Powerpipe CLI version
+    - server_version: The MCP server version
+    - server_start_time: When the server was started
+    - mod_location: Current working directory for mods
+
+This resource enables AI tools to check and verify the Powerpipe environment state.
 
 ## Installation
 
