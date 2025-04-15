@@ -1,10 +1,10 @@
 {
   "name": "@turbot/powerpipe-mcp",
   "version": "0.1.0",
-  "description": "MCP server for interacting with Powerpipe.",
+  "description": "Powerpipe MCP server to run benchmarks, detections and controls using AI.",
   "license": "Apache-2.0",
-  "author": "Turbot, Inc. (https://turbot.com)",
-  "homepage": "https://turbot.com",
+  "author": "Turbot HQ, Inc",
+  "homepage": "https://github.com/turbot/powerpipe-mcp",
   "bugs": "https://github.com/turbot/powerpipe-mcp/issues",
   "type": "module",
   "bin": {
