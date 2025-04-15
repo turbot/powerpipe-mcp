@@ -10,41 +10,12 @@ interface Mod {
   documentation: string;
 }
 
-function parseMods(output: string): Mod[] {
-  const rawMods = JSON.parse(output);
-  if (!Array.isArray(rawMods)) {
-    throw new Error('Expected array output from Powerpipe CLI');
-  }
-
-  // Filter to only include specified fields
-  return rawMods.map(mod => ({
-    title: mod.title || '',
-    qualified_name: mod.qualified_name || '',
-    documentation: mod.documentation || ''
-  }));
-}
-
-function formatResult(mods: Mod[], cmd: string) {
-  const result = {
-    mods,
-    debug: {
-      command: cmd
-    }
-  };
-
-  return {
-    content: [{
-      type: "text",
-      text: JSON.stringify(result, null, 2)
-    }]
-  };
-}
-
 export const tool: Tool = {
   name: "powerpipe_mod_list",
   description: "List all available Powerpipe mods",
   inputSchema: {
     type: "object",
+    properties: {},
     additionalProperties: false
   },
   handler: async () => {
