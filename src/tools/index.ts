@@ -1,5 +1,13 @@
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolRequest, type Tool, type ServerResult } from "@modelcontextprotocol/sdk/types.js";
+import { logger } from "../services/logger.js";
+import { formatCommandError } from "../utils/command.js";
+import type { ErrorObject } from "ajv";
+import AjvModule from "ajv";
+
+// Initialize JSON Schema validator
+const Ajv = AjvModule.default || AjvModule;
+const ajv = new Ajv();
 
 // Most Frequently Used Operations
 import { tool as benchmarkListTool } from './powerpipe_benchmark_list.js';
@@ -66,25 +74,82 @@ export const tools = {
 export function setupTools(server: Server) {
   // Register tool list handler
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    return {
-      tools: Object.values(tools),
-    };
+    try {
+      return {
+        tools: Object.values(tools),
+      };
+    } catch (error) {
+      logger.error('Error listing tools:', error);
+      return formatCommandError(error);
+    }
   });
 
   // Register tool handlers
   server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
     const { name, arguments: args } = request.params;
-    const tool = tools[name as keyof typeof tools];
+    
+    try {
+      // Validate tool exists
+      const tool = tools[name as keyof typeof tools];
+      if (!tool) {
+        throw new Error(`Unknown tool: ${name}`);
+      }
 
-    if (!tool) {
-      throw new Error(`Unknown tool: ${name}`);
+      // Validate tool has handler
+      if (!tool.handler) {
+        throw new Error(`Tool ${name} has no handler defined`);
+      }
+
+      // Validate arguments against the tool's schema
+      if (tool.inputSchema) {
+        const validate = ajv.compile(tool.inputSchema);
+        if (!validate(args)) {
+          logger.error(`Invalid arguments for tool ${name}:`, validate.errors);
+          
+          // Format validation errors in a user-friendly way
+          const errors = validate.errors || [];
+          const errorMessages = errors.map((err: ErrorObject) => {
+            const path = err.instancePath.replace(/^\//, '') || 'input';
+            switch (err.keyword) {
+              case 'required':
+                return `Missing required field: ${err.params.missingProperty}`;
+              case 'type':
+                return `${path} must be a ${err.params.type}`;
+              case 'enum':
+                return `${path} must be one of: ${err.params.allowedValues?.join(', ')}`;
+              case 'additionalProperties':
+                return `Unexpected field: ${err.params.additionalProperty}`;
+              default:
+                return `${path}: ${err.message}`;
+            }
+          });
+
+          return {
+            content: [{
+              type: "text",
+              text: errorMessages.join('\n')
+            }],
+            isError: true
+          };
+        }
+      }
+
+      // Log tool invocation
+      logger.info(`Executing tool: ${name}`, { args });
+
+      // Execute tool handler with validated arguments
+      const result = await (tool.handler as (args: unknown) => Promise<ServerResult>)(args || {});
+      
+      // Log tool completion
+      logger.info(`Tool ${name} completed successfully`);
+      
+      return result;
+    } catch (error) {
+      // Log error
+      logger.error(`Error executing tool ${name}:`, error);
+      
+      // Format and return error
+      return formatCommandError(error);
     }
-
-    if (!tool.handler) {
-      throw new Error(`Tool ${name} has no handler defined`);
-    }
-
-    // Each tool is responsible for validating its own parameters
-    return await (tool.handler as (args: unknown) => Promise<ServerResult>)(args || {});
   });
 } 

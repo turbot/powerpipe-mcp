@@ -1,3 +1,4 @@
+import { GetPromptResult } from "@modelcontextprotocol/sdk/types.js";
 import type { Prompt } from "../types/prompt.js";
 
 export const prompt: Prompt = {
