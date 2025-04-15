@@ -45,7 +45,6 @@ export const tool: Tool = {
   description: "List all available Powerpipe mods",
   inputSchema: {
     type: "object",
-    properties: {},
     additionalProperties: false
   },
   handler: async () => {
@@ -56,8 +55,14 @@ export const tool: Tool = {
 
     try {
       const output = executeCommand(cmd, { env });
-      const mods = parseMods(output);
-      return formatResult(mods, cmd);
+      const result = JSON.parse(output);
+      
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify(result)
+        }]
+      };
     } catch (error) {
       return formatCommandError(error, cmd);
     }

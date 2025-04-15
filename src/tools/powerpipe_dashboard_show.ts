@@ -53,7 +53,7 @@ export const tool: Tool = {
             debug: {
               command: cmd
             }
-          }, null, 2)
+          })
         }]
       };
     } catch (error) {
