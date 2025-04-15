@@ -40,7 +40,7 @@ function formatResult(detections: Detection[], cmd: string) {
 
 export const tool: Tool = {
   name: "powerpipe_detection_list",
-  description: "List all available Powerpipe detections",
+  description: "Lists all available security and compliance detections in your configured mod directory. Detections are specialized controls focused on identifying specific security issues or compliance violations. Use this to find targeted security checks you can run.",
   inputSchema: {
     type: "object",
     properties: {},

@@ -23,7 +23,7 @@ function validateParams(args: unknown): ControlShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_control_show",
-  description: "Get detailed information about a specific Powerpipe control",
+  description: "Displays detailed information about a specific compliance control, including its implementation details, associated queries, and documentation. Use this to understand exactly how a control evaluates compliance and what data it examines. Requires the control's qualified name from control list.",
   inputSchema: {
     type: "object",
     properties: {

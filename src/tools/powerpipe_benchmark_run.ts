@@ -24,7 +24,7 @@ function validateParams(args: unknown): BenchmarkRunParams {
 
 export const tool: Tool = {
   name: "powerpipe_benchmark_run",
-  description: "Run a specific Powerpipe benchmark",
+  description: "Executes all controls in a compliance benchmark to evaluate your infrastructure against the framework's requirements. Each control will run its associated queries and report compliance status. Use benchmark show first to understand what will be evaluated.",
   inputSchema: {
     type: "object",
     properties: {

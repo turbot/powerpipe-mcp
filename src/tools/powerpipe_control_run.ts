@@ -24,7 +24,7 @@ function validateParams(args: unknown): ControlRunParams {
 
 export const tool: Tool = {
   name: "powerpipe_control_run",
-  description: "Run a specific Powerpipe control",
+  description: "Executes a single compliance control to evaluate your infrastructure against a specific requirement. This is useful when you want to check compliance with a particular requirement rather than running an entire benchmark. Use control show first to understand what will be evaluated.",
   inputSchema: {
     type: "object",
     properties: {

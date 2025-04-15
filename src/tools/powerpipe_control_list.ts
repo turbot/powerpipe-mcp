@@ -42,7 +42,7 @@ function formatResult(controls: Control[], cmd: string) {
 
 export const tool: Tool = {
   name: "powerpipe_control_list",
-  description: "List all available Powerpipe controls",
+  description: "Lists all individual compliance controls available in your configured mod directory. Controls are the building blocks of benchmarks, each representing a specific compliance requirement. Use this to find controls you can run individually rather than running entire benchmarks.",
   inputSchema: {
     type: "object",
     properties: {},

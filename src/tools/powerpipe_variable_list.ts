@@ -40,7 +40,7 @@ function formatResult(variables: Variable[], cmd: string) {
 
 export const tool: Tool = {
   name: "powerpipe_variable_list",
-  description: "List all available Powerpipe variables",
+  description: "Lists all configuration variables defined in your Powerpipe mods. Variables allow customization of benchmarks, controls, and queries to match your environment and requirements. Use this to discover what aspects of your compliance checks can be customized.",
   inputSchema: {
     type: "object",
     properties: {},

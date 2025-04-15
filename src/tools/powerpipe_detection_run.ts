@@ -24,7 +24,7 @@ function validateParams(args: unknown): DetectionRunParams {
 
 export const tool: Tool = {
   name: "powerpipe_detection_run",
-  description: "Run a specific Powerpipe detection",
+  description: "Executes a specific security detection to identify potential security issues or compliance violations in your infrastructure. Each detection focuses on a particular security concern and provides actionable results. Use detection show first to understand what will be checked.",
   inputSchema: {
     type: "object",
     properties: {

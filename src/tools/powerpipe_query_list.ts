@@ -40,7 +40,7 @@ function formatResult(queries: Query[], cmd: string) {
 
 export const tool: Tool = {
   name: "powerpipe_query_list",
-  description: "List all available Powerpipe queries",
+  description: "Lists all available SQL queries that power the controls and detections in your configured mod directory. Queries are the foundation of how Powerpipe evaluates your infrastructure. Use this to understand the underlying implementation of controls and detections.",
   inputSchema: {
     type: "object",
     properties: {},

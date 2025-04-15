@@ -23,7 +23,7 @@ function validateParams(args: unknown): QueryShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_query_show",
-  description: "Get detailed information about a specific Powerpipe query",
+  description: "Displays the SQL implementation and metadata for a specific query used by controls and detections. Use this to examine exactly what data is being queried and how compliance determinations are made. Requires the query's qualified name from query list.",
   inputSchema: {
     type: "object",
     properties: {

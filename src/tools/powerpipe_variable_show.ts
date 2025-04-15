@@ -23,7 +23,7 @@ function validateParams(args: unknown): VariableShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_variable_show",
-  description: "Get detailed information about a specific Powerpipe variable",
+  description: "Displays detailed information about a specific configuration variable, including its current value, type, and documentation. Use this to understand how to configure a variable and what impact it will have on your compliance checks. Requires the variable's qualified name from variable list.",
   inputSchema: {
     type: "object",
     properties: {

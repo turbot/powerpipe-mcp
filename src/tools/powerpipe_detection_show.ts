@@ -23,7 +23,7 @@ function validateParams(args: unknown): DetectionShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_detection_show",
-  description: "Get detailed information about a specific Powerpipe detection",
+  description: "Displays detailed information about a specific security detection, including its implementation, severity, and remediation guidance. Use this to understand what security issues a detection looks for and how to fix them if found. Requires the detection's qualified name from detection list.",
   inputSchema: {
     type: "object",
     properties: {

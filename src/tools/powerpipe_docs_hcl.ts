@@ -94,7 +94,7 @@ function fetchDocs(element: string): Promise<string> {
 
 export const tool: Tool = {
   name: "powerpipe_docs_hcl",
-  description: "Get HCL documentation for Powerpipe elements (benchmark, control, query, etc)",
+  description: "Provides detailed documentation and examples for writing Powerpipe HCL configurations. Use this tool to understand the syntax and options available for each element type (benchmarks, controls, queries, etc). Essential reference when writing or modifying Powerpipe mod files.",
   inputSchema: {
     type: "object",
     properties: {

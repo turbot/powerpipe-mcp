@@ -23,7 +23,7 @@ function validateParams(args: unknown): BenchmarkShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_benchmark_show",
-  description: "Get detailed information about a specific Powerpipe benchmark",
+  description: "Displays detailed information about a specific compliance benchmark, including its controls, tags, and documentation. Use this to understand the scope and requirements of a compliance framework before running it. Requires the benchmark's qualified name from benchmark list.",
   inputSchema: {
     type: "object",
     properties: {

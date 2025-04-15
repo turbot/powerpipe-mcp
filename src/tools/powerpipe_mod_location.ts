@@ -25,7 +25,7 @@ function validateParams(args: unknown): ValidationResult {
 
 export const tool: Tool = {
   name: "powerpipe_mod_location",
-  description: "Get or set the Powerpipe mod location",
+  description: "Sets up or displays the working directory for Powerpipe mods, which must be configured before using any other Powerpipe tools. This is a critical first step - you must set the mod location to the directory containing your Powerpipe mod files before running benchmarks, controls, or other operations.",
   inputSchema: {
     type: "object",
     properties: {

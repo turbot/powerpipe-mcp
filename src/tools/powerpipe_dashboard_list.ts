@@ -5,7 +5,7 @@ import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 
 export const tool: Tool = {
   name: "powerpipe_dashboard_list",
-  description: "List all available Powerpipe dashboards",
+  description: "Lists all available dashboards in your configured mod directory. Dashboards provide visual representations of your compliance and security status, combining multiple controls and queries into meaningful displays. Use this to find dashboards that give you insights into your compliance posture.",
   inputSchema: {
     type: "object",
     properties: {},

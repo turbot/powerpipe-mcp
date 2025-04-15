@@ -42,7 +42,7 @@ function formatResult(benchmarks: Benchmark[], cmd: string) {
 
 export const tool: Tool = {
   name: "powerpipe_benchmark_list",
-  description: "List all available Powerpipe benchmarks",
+  description: "Lists all available compliance benchmarks in your configured mod directory. Use this as your starting point to discover which compliance frameworks are available and get their qualified names. Each benchmark represents a complete compliance framework or standard.",
   inputSchema: {
     type: "object",
     properties: {},

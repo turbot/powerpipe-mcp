@@ -22,7 +22,7 @@ function validateParams(args: unknown): DashboardShowParams {
 
 export const tool: Tool = {
   name: "powerpipe_dashboard_show",
-  description: "Get detailed information about a specific Powerpipe dashboard",
+  description: "Displays detailed information about a specific dashboard, including its layout, components, and data sources. Use this to understand what information a dashboard will display and how it's structured before running it. Requires the dashboard's qualified name from dashboard list.",
   inputSchema: {
     type: "object",
     properties: {
