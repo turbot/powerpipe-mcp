@@ -22,52 +22,60 @@ Connects directly to your Powerpipe installation, giving you AI access to your c
 
 ### Tools
 
-#### Core Benchmark & Control Operations
+#### Essential Setup
+- **powerpipe_mod_location**
+  - Critical first step: Sets up the working directory for your Powerpipe mods
+  - Must be configured before using any other tools
+  - Get or set the directory containing your Powerpipe mod files
+
+#### Core Benchmark Operations
 - **powerpipe_benchmark_list**, **powerpipe_benchmark_show**, **powerpipe_benchmark_run**
-  - List, view, and run Powerpipe benchmarks
-  - Input for show/run: `qualified_name` (string): The qualified name of the benchmark
-  - Returns benchmark metadata and execution results
-  - Run command handles non-zero exit codes (1-2) for alarms/errors
+  - Discover and work with complete compliance frameworks
+  - List available compliance benchmarks and understand their scope
+  - View detailed benchmark information including controls, tags, and documentation
+  - Execute benchmarks to evaluate infrastructure against framework requirements
 
+#### Control Management
 - **powerpipe_control_list**, **powerpipe_control_show**, **powerpipe_control_run**
-  - List, view, and run Powerpipe controls
-  - Input for show/run: `qualified_name` (string): The qualified name of the control
-  - Returns control metadata and execution results
-  - Run command handles non-zero exit codes (1-2) for alarms/errors
+  - Work with individual compliance requirements
+  - List and examine specific controls from various frameworks
+  - View control implementation details and associated queries
+  - Run individual controls for targeted compliance checks
 
-#### Detection & Query Operations
+#### Security Detections
 - **powerpipe_detection_list**, **powerpipe_detection_show**, **powerpipe_detection_run**
-  - List, view, and run Powerpipe detections
-  - Input for show/run: `qualified_name` (string): The qualified name of the detection
-  - Used for continuous monitoring and threat detection
+  - Identify specific security issues and compliance violations
+  - List available security detections
+  - View detection details including severity and remediation guidance
+  - Run targeted security checks with actionable results
 
+#### Query Inspection
 - **powerpipe_query_list**, **powerpipe_query_show**
-  - List and view Powerpipe queries
-  - Input for show: `qualified_name` (string): The qualified name of the query
-  - Used to understand the underlying queries that power controls
+  - Examine the foundation of compliance evaluation
+  - List all SQL queries that power controls and detections
+  - View query implementations to understand compliance checks
+  - Analyze how infrastructure data is evaluated
 
 #### Dashboard Operations
 - **powerpipe_dashboard_list**, **powerpipe_dashboard_show**, **powerpipe_dashboard_run**
-  - List, view, and run Powerpipe dashboards
-  - Input for show/run: `qualified_name` (string): The qualified name of the dashboard
-  - Used for visualizing compliance and control results
+  - Work with compliance and security visualizations
+  - List available dashboards for compliance insights
+  - View dashboard structure and components
+  - Execute dashboards to get JSON snapshot data of compliance status
 
-#### Variable Management
+#### Configuration Management
 - **powerpipe_variable_list**, **powerpipe_variable_show**
-  - List and view Powerpipe variables
-  - Input for show: `qualified_name` (string): The qualified name of the variable
-  - Used to understand and manage variable definitions
+  - Customize compliance evaluations
+  - List available configuration variables
+  - View variable details and current settings
+  - Understand how to customize checks for your environment
 
-#### Configuration & Documentation
-- **powerpipe_mod_location**
-  - Get or set the Powerpipe mod location
-  - Optional input: `location` (string): The location to set
-  - Returns current location if no input provided
-
+#### Development Support
 - **powerpipe_docs_hcl**
-  - Get HCL documentation for Powerpipe elements
-  - Input: `element` (string): The element type to get documentation for
-  - Helps with understanding HCL syntax and structure
+  - Essential reference for Powerpipe development
+  - Access detailed HCL documentation and examples
+  - Understand syntax for all Powerpipe elements
+  - Get guidance for writing and modifying mod files
 
 ### Prompts
 
