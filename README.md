@@ -173,48 +173,51 @@ The mod location argument is required and must point to a directory containing y
 
 ## Prompting Guide
 
-### Best Practices
+First, run the `best_practices` prompt included in the MCP server to teach your LLM how best to work with Powerpipe. Then, ask anything!
 
-The Powerpipe MCP includes a pre-built `best_practices` prompt. Running it before running your own prompts will teach the LLM how to work most effectively with Powerpipe, including:
-
-- How to explore available benchmarks and controls using powerpipe_benchmark_list and powerpipe_control_list
-- When to use specific tools for different operations (benchmarks, controls, detections, etc.)
-- How to interpret compliance results and suggest remediation steps
-- Best practices for working with mod locations and variables
-
-In Claude Desktop, you can load this prompt through the plug icon in the prompt window.
-
-### Example Prompts
-
-Each prompt below is designed to work with Powerpipe's various components:
-
+Explore available compliance frameworks:
 ```
-List all available benchmarks
+What benchmarks do we have available in Powerpipe?
 ```
 
+Simple, specific questions work well:
 ```
-Show me details about the CIS AWS Benchmark
-```
-
-```
-Find all controls related to S3 bucket encryption
+Show me all controls related to S3 bucket encryption in the CIS AWS benchmark
 ```
 
+Generate a compliance report:
 ```
-Run the AWS security benchmark and analyze the results
+What's our current compliance status for the NIST controls?
+```
+
+Dive into the details:
+```
+Find all failed controls in the AWS Security benchmark and explain why they failed
+```
+
+Get information about specific requirements:
+```
+Show me all controls related to password policies across our benchmarks
+```
+
+Explore with wide ranging questions:
+```
+Analyze our compliance gaps and suggest remediation steps
 ```
 
 Remember to:
-- Ask about specific benchmarks, controls, or compliance areas
-- Be clear about which frameworks or standards you're interested in
-- Start with simple questions about one component
-- Add more complexity or conditions after seeing the initial results
+- Be specific about which benchmarks or frameworks you're interested in
+- Mention the type of controls you want to analyze (encryption, access, networking, etc.)
+- Start with simple queries before adding complex conditions
+- Use natural language - the LLM will handle finding the right controls and benchmarks
+- Be bold and open, it's amazing what insights the LLM will discover!
 
-Claude will:
+The LLM will:
 - Choose the appropriate Powerpipe tools for your request
 - Run benchmarks and controls as needed
-- Format the results in a clear, readable way
-- Provide insights and remediation suggestions based on the findings
+- Format results in a clear, readable way
+- Provide insights and remediation suggestions
+- Help you understand compliance requirements and status
 
 ## Local Development
 
