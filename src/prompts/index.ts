@@ -1,6 +1,6 @@
-import { ListPromptsRequestSchema, GetPromptRequestSchema, type Prompt } from "@modelcontextprotocol/sdk/types.js";
+import { ListPromptsRequestSchema, GetPromptRequestSchema, type Prompt, GetPromptResult } from "@modelcontextprotocol/sdk/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { BEST_PRACTICES_PROMPT, handleBestPracticesPrompt } from "./bestPractices.js";
+import { BEST_PRACTICES_PROMPT, handleBestPracticesPrompt } from "./best_practices.js";
 
 // Export all prompts for server capabilities
 export const prompts = {
