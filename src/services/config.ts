@@ -1,17 +1,17 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import { logger } from "./logger.js";
 
 export class ConfigurationService {
   private static instance: ConfigurationService;
-  private defaultModLocation: string;
+  private modLocation: string;
 
   private constructor() {
-    // Initialize with environment variable or default to current working directory
-    // Check for MCP-specific var first, fall back to general Powerpipe var, then cwd
-    this.defaultModLocation = process.env.POWERPIPE_MCP_MOD_LOCATION || 
+    // Initialize with environment variable
+    this.modLocation = process.env.POWERPIPE_MCP_MOD_LOCATION || 
       process.env.POWERPIPE_MOD_LOCATION ||
-      process.cwd();
-    logger.debug(`Initialized ConfigurationService with mod location: ${this.defaultModLocation}`);
+      '';  // Empty string as placeholder, will be set by required argument
+    logger.debug(`Initialized ConfigurationService with mod location: ${this.modLocation}`);
   }
 
   public static getInstance(): ConfigurationService {
@@ -22,20 +22,44 @@ export class ConfigurationService {
   }
 
   /**
+   * Validate and resolve a mod location path
+   * @param location Absolute or relative path to validate
+   * @returns The resolved path if valid
+   * @throws Error if the path is invalid or directory doesn't exist
+   */
+  private validateModLocation(location: string): string {
+    const resolvedPath = path.resolve(location);
+    
+    try {
+      const stats = fs.statSync(resolvedPath);
+      if (!stats.isDirectory()) {
+        throw new Error(`Path exists but is not a directory: ${resolvedPath}`);
+      }
+    } catch (error) {
+      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+        throw new Error(`Directory does not exist: ${resolvedPath}`);
+      }
+      throw error; // Re-throw other file system errors
+    }
+
+    return resolvedPath;
+  }
+
+  /**
    * Set the working directory for Powerpipe mods
    * @param location Absolute or relative path to the mod location
-   * @returns true if location was set successfully, false otherwise
+   * @returns Object containing success status and error message if failed
    */
-  public setModLocation(location: string): boolean {
+  public setModLocation(location: string): { success: boolean; error?: string } {
     try {
-      const resolvedPath = path.resolve(location);
-      // TODO: Add validation that the directory contains valid Powerpipe mods
-      this.defaultModLocation = resolvedPath;
+      const resolvedPath = this.validateModLocation(location);
+      this.modLocation = resolvedPath;
       logger.info(`Set mod location to: ${resolvedPath}`);
-      return true;
+      return { success: true };
     } catch (error) {
-      logger.error(`Failed to set mod location: ${error}`);
-      return false;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(`Failed to set mod location: ${errorMessage}`);
+      return { success: false, error: errorMessage };
     }
   }
 
@@ -44,22 +68,7 @@ export class ConfigurationService {
    * @returns The absolute path to the current mod location
    */
   public getModLocation(): string {
-    return this.defaultModLocation;
-  }
-
-  /**
-   * Reset the working directory to the default value
-   * @returns true if reset was successful, false otherwise
-   */
-  public resetModLocation(): boolean {
-    try {
-      this.defaultModLocation = this.defaultModLocation;
-      logger.info(`Reset mod location to default: ${this.defaultModLocation}`);
-      return true;
-    } catch (error) {
-      logger.error(`Failed to reset mod location: ${error}`);
-      return false;
-    }
+    return this.modLocation;
   }
 
   /**
@@ -67,10 +76,16 @@ export class ConfigurationService {
    * @param args Command line arguments array
    */
   public parseCommandLineArgs(args: string[]): void {
-    const modLocIndex = args.indexOf('--mod-location');
-    if (modLocIndex !== -1 && modLocIndex + 1 < args.length) {
-      const location = args[modLocIndex + 1];
-      this.setModLocation(location);
+    const modLocation = args[2]; // First argument after node and script path
+    if (!modLocation) {
+      logger.error('Error: Mod location is required. Please provide it as the first argument.');
+      process.exit(1);
+    }
+
+    const result = this.setModLocation(modLocation);
+    if (!result.success) {
+      logger.error(`Error: ${result.error}`);
+      process.exit(1);
     }
   }
 } 

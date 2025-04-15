@@ -55,30 +55,15 @@ export const tool: Tool = {
     }
 
     // Set operation
-    const resolvedLocation = path.resolve(params.location);
-    
-    // Check if directory exists
-    try {
-      const stats = fs.statSync(resolvedLocation);
-      if (!stats.isDirectory()) {
-        return formatCommandError(new Error(`Path exists but is not a directory: ${resolvedLocation}`));
-      }
-    } catch (error) {
-      if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-        return formatCommandError(new Error(`Directory does not exist: ${resolvedLocation}`));
-      }
-      // Other file system errors
-      return formatCommandError(error);
-    }
-
-    if (!config.setModLocation(resolvedLocation)) {
-      return formatCommandError(new Error(`Failed to set mod location to: ${resolvedLocation}`));
+    const result = config.setModLocation(params.location);
+    if (!result.success) {
+      return formatCommandError(new Error(result.error || `Failed to set mod location to: ${params.location}`));
     }
 
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ location: resolvedLocation })
+        text: JSON.stringify({ location: config.getModLocation() })
       }]
     };
   }
