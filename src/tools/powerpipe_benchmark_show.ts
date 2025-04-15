@@ -2,33 +2,34 @@ import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
 import { executeCommand, formatCommandError } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
+import { logger } from "../services/logger.js";
 
-interface DashboardRunParams {
+interface BenchmarkShowParams {
   qualified_name: string;
 }
 
-function validateParams(args: unknown): DashboardRunParams {
+function validateParams(args: unknown): BenchmarkShowParams {
   if (!args || typeof args !== 'object') {
     throw new Error('Arguments must be an object');
   }
 
-  const params = args as Partial<DashboardRunParams>;
+  const params = args as Partial<BenchmarkShowParams>;
   if (!params.qualified_name || typeof params.qualified_name !== 'string') {
     throw new Error('qualified_name is required and must be a string');
   }
 
-  return params as DashboardRunParams;
+  return params as BenchmarkShowParams;
 }
 
 export const tool: Tool = {
-  name: "dashboard_run",
-  description: "Run a specific Powerpipe dashboard",
+  name: "powerpipe_benchmark_show",
+  description: "Get detailed information about a specific Powerpipe benchmark",
   inputSchema: {
     type: "object",
     properties: {
       qualified_name: {
         type: "string",
-        description: "The qualified name of the dashboard to run"
+        description: "The qualified name of the benchmark to show details for"
       }
     },
     required: ["qualified_name"],
@@ -38,17 +39,18 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = buildPowerpipeCommand(`dashboard run ${params.qualified_name}`, modDirectory, { output: 'pps' });
+    const cmd = buildPowerpipeCommand(`benchmark show ${params.qualified_name}`, modDirectory, { output: 'json' });
     const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
+      const benchmark = JSON.parse(output);
       
       return {
         content: [{
           type: "text",
           text: JSON.stringify({
-            output,
+            benchmark,
             debug: {
               command: cmd
             }

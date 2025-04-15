@@ -31,37 +31,41 @@ The server provides several tools for interacting with your benchmarks and contr
 #### Most Frequently Used Operations
 
 ##### Benchmark Tools
-- `benchmark_list` - List all available Powerpipe benchmarks
-- `benchmark_show` - Get detailed information about a specific benchmark
-- `benchmark_run` - Run a specific benchmark
+- `powerpipe_benchmark_list` - List all available Powerpipe benchmarks
+- `powerpipe_benchmark_show` - Get detailed information about a specific benchmark
+- `powerpipe_benchmark_run` - Run a specific benchmark
 
 ##### Control Tools
-- `control_list` - List all available Powerpipe controls
-- `control_show` - Get detailed information about a specific control
-- `control_run` - Run a specific control
+- `powerpipe_control_list` - List all available Powerpipe controls
+- `powerpipe_control_show` - Get detailed information about a specific control
+- `powerpipe_control_run` - Run a specific control
 
 #### Secondary Operations
 
 ##### Detection Tools
-- `detection_list` - List all available Powerpipe detections
-- `detection_show` - Get detailed information about a specific detection
-- `detection_run` - Run a specific detection
+- `powerpipe_detection_list` - List all available Powerpipe detections
+- `powerpipe_detection_show` - Get detailed information about a specific detection
+- `powerpipe_detection_run` - Run a specific detection
 
 ##### Query Tools
-- `query_list` - List all available Powerpipe queries
-- `query_show` - Get detailed information about a specific query
+- `powerpipe_query_list` - List all available Powerpipe queries
+- `powerpipe_query_show` - Get detailed information about a specific query
 
 #### Configuration & Utilities
 
 ##### Mod Tools
-- `mod_location` - Get or set the Powerpipe mod location
+- `powerpipe_mod_location` - Get or set the Powerpipe mod location
 
 ##### Variable Tools
-- `variable_list` - List all available Powerpipe variables
-- `variable_show` - Get detailed information about a specific variable
+- `powerpipe_variable_list` - List all available Powerpipe variables
+- `powerpipe_variable_show` - Get detailed information about a specific variable
 
-### Resources
+##### Dashboard Tools
+- `powerpipe_dashboard_list` - List all available Powerpipe dashboards
+- `powerpipe_dashboard_show` - Get detailed information about a specific dashboard
+- `powerpipe_dashboard_run` - Run a specific dashboard
 
+##### Documentation Tools
 The Powerpipe MCP server provides access to the following resources:
 
 #### Status

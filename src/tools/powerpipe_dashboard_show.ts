@@ -2,34 +2,33 @@ import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
 import { executeCommand, formatCommandError } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
-import { logger } from "../services/logger.js";
 
-interface QueryShowParams {
+interface DashboardShowParams {
   qualified_name: string;
 }
 
-function validateParams(args: unknown): QueryShowParams {
+function validateParams(args: unknown): DashboardShowParams {
   if (!args || typeof args !== 'object') {
     throw new Error('Arguments must be an object');
   }
 
-  const params = args as Partial<QueryShowParams>;
+  const params = args as Partial<DashboardShowParams>;
   if (!params.qualified_name || typeof params.qualified_name !== 'string') {
     throw new Error('qualified_name is required and must be a string');
   }
 
-  return params as QueryShowParams;
+  return params as DashboardShowParams;
 }
 
 export const tool: Tool = {
-  name: "query_show",
-  description: "Get detailed information about a specific Powerpipe query",
+  name: "powerpipe_dashboard_show",
+  description: "Get detailed information about a specific Powerpipe dashboard",
   inputSchema: {
     type: "object",
     properties: {
       qualified_name: {
         type: "string",
-        description: "The qualified name of the query to show details for"
+        description: "The qualified name of the dashboard to show details for"
       }
     },
     required: ["qualified_name"],
@@ -39,18 +38,18 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = buildPowerpipeCommand(`query show ${params.qualified_name}`, modDirectory, { output: 'json' });
+    const cmd = buildPowerpipeCommand(`dashboard show ${params.qualified_name}`, modDirectory, { output: 'json' });
     const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
-      const query = JSON.parse(output);
+      const dashboard = JSON.parse(output);
       
       return {
         content: [{
           type: "text",
           text: JSON.stringify({
-            query,
+            dashboard,
             debug: {
               command: cmd
             }

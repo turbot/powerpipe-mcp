@@ -91,22 +91,22 @@ export async function handleBestPracticesPrompt(): Promise<GetPromptResult> {
 
 Example workflow:
 1. Set up environment:
-   - Set working directory to your mod location
-   - Verify required benchmarks are present
+   - Use powerpipe_mod_location to set your working directory
+   - Use powerpipe_benchmark_list to verify required benchmarks
    - Check mod dependencies
 
 2. List available benchmarks and controls:
-   - List CIS AWS Benchmark controls
-   - Check benchmark version and applicability
+   - Use powerpipe_benchmark_list to view CIS AWS Benchmark controls
+   - Use powerpipe_benchmark_show to check version and applicability
    - Verify benchmark locations
 
 3. Review specific controls:
-   - Get details about S3 encryption controls
+   - Use powerpipe_control_show to get details about S3 encryption controls
    - Check control requirements and severity
    - Understand control dependencies
 
 4. Run controls and analyze results:
-   - Run S3 encryption controls
+   - Use powerpipe_control_run for S3 encryption controls
    - Review findings and remediation steps
    - Document compliance status`,
         }

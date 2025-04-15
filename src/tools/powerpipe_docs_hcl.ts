@@ -93,7 +93,7 @@ function fetchDocs(element: string): Promise<string> {
 }
 
 export const tool: Tool = {
-  name: "docs_hcl",
+  name: "powerpipe_docs_hcl",
   description: "Get HCL documentation for Powerpipe elements (benchmark, control, query, etc)",
   inputSchema: {
     type: "object",

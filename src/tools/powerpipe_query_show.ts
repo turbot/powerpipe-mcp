@@ -4,32 +4,32 @@ import { executeCommand, formatCommandError } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
-interface ControlShowParams {
+interface QueryShowParams {
   qualified_name: string;
 }
 
-function validateParams(args: unknown): ControlShowParams {
+function validateParams(args: unknown): QueryShowParams {
   if (!args || typeof args !== 'object') {
     throw new Error('Arguments must be an object');
   }
 
-  const params = args as Partial<ControlShowParams>;
+  const params = args as Partial<QueryShowParams>;
   if (!params.qualified_name || typeof params.qualified_name !== 'string') {
     throw new Error('qualified_name is required and must be a string');
   }
 
-  return params as ControlShowParams;
+  return params as QueryShowParams;
 }
 
 export const tool: Tool = {
-  name: "control_show",
-  description: "Get detailed information about a specific Powerpipe control",
+  name: "powerpipe_query_show",
+  description: "Get detailed information about a specific Powerpipe query",
   inputSchema: {
     type: "object",
     properties: {
       qualified_name: {
         type: "string",
-        description: "The qualified name of the control to show details for"
+        description: "The qualified name of the query to show details for"
       }
     },
     required: ["qualified_name"],
@@ -39,18 +39,18 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = buildPowerpipeCommand(`control show ${params.qualified_name}`, modDirectory, { output: 'json' });
+    const cmd = buildPowerpipeCommand(`query show ${params.qualified_name}`, modDirectory, { output: 'json' });
     const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
-      const control = JSON.parse(output);
+      const query = JSON.parse(output);
       
       return {
         content: [{
           type: "text",
           text: JSON.stringify({
-            control,
+            query,
             debug: {
               command: cmd
             }

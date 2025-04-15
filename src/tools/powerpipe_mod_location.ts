@@ -24,7 +24,7 @@ function validateParams(args: unknown): ValidationResult {
 }
 
 export const tool: Tool = {
-  name: "mod_location",
+  name: "powerpipe_mod_location",
   description: "Get or set the Powerpipe mod location",
   inputSchema: {
     type: "object",

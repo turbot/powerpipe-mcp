@@ -39,7 +39,7 @@ function formatResult(detections: Detection[], cmd: string) {
 }
 
 export const tool: Tool = {
-  name: "detection_list",
+  name: "powerpipe_detection_list",
   description: "List all available Powerpipe detections",
   inputSchema: {
     type: "object",

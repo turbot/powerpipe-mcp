@@ -22,7 +22,7 @@ function validateParams(args: unknown): DetectionRunParams {
 }
 
 export const tool: Tool = {
-  name: "detection_run",
+  name: "powerpipe_detection_run",
   description: "Run a specific Powerpipe detection",
   inputSchema: {
     type: "object",

@@ -4,7 +4,7 @@ import { executeCommand, formatCommandError } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 
 export const tool: Tool = {
-  name: "dashboard_list",
+  name: "powerpipe_dashboard_list",
   description: "List all available Powerpipe dashboards",
   inputSchema: {
     type: "object",

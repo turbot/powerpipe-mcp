@@ -1,35 +1,35 @@
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { ConfigurationService } from "../services/config.js";
-import { executeCommand, formatCommandError, CommandError } from "../utils/command.js";
+import { executeCommand, formatCommandError } from "../utils/command.js";
 import { buildPowerpipeCommand, getPowerpipeEnv } from "../utils/powerpipe.js";
 import { logger } from "../services/logger.js";
 
-interface ControlRunParams {
+interface DetectionShowParams {
   qualified_name: string;
 }
 
-function validateParams(args: unknown): ControlRunParams {
+function validateParams(args: unknown): DetectionShowParams {
   if (!args || typeof args !== 'object') {
     throw new Error('Arguments must be an object');
   }
 
-  const params = args as Partial<ControlRunParams>;
+  const params = args as Partial<DetectionShowParams>;
   if (!params.qualified_name || typeof params.qualified_name !== 'string') {
     throw new Error('qualified_name is required and must be a string');
   }
 
-  return params as ControlRunParams;
+  return params as DetectionShowParams;
 }
 
 export const tool: Tool = {
-  name: "control_run",
-  description: "Run a Powerpipe control by its qualified name",
+  name: "powerpipe_detection_show",
+  description: "Get detailed information about a specific Powerpipe detection",
   inputSchema: {
     type: "object",
     properties: {
       qualified_name: {
         type: "string",
-        description: "The qualified name of the control to run"
+        description: "The qualified name of the detection to show details for"
       }
     },
     required: ["qualified_name"],
@@ -39,16 +39,18 @@ export const tool: Tool = {
     const params = validateParams(args);
     const config = ConfigurationService.getInstance();
     const modDirectory = config.getModLocation();
-    const cmd = buildPowerpipeCommand(`control run ${params.qualified_name}`, modDirectory, { output: 'json' });
+    const cmd = buildPowerpipeCommand(`detection show ${params.qualified_name}`, modDirectory, { output: 'json' });
     const env = getPowerpipeEnv(modDirectory);
 
     try {
       const output = executeCommand(cmd, { env });
+      const detection = JSON.parse(output);
+      
       return {
         content: [{
           type: "text",
           text: JSON.stringify({
-            output: JSON.parse(output),
+            detection,
             debug: {
               command: cmd
             }
@@ -56,29 +58,6 @@ export const tool: Tool = {
         }]
       };
     } catch (error) {
-      // If we have stdout, return it as valid output even if command failed
-      if (error instanceof Error && 'stdout' in error) {
-        const cmdError = error as CommandError;
-        if (cmdError.stdout) {
-          try {
-            // Validate it's JSON
-            const parsed = JSON.parse(cmdError.stdout);
-            return {
-              content: [{
-                type: "text",
-                text: JSON.stringify({
-                  output: parsed,
-                  debug: {
-                    command: cmd
-                  }
-                }, null, 2)
-              }]
-            };
-          } catch (parseError) {
-            logger.error('Failed to parse control output:', parseError);
-          }
-        }
-      }
       return formatCommandError(error, cmd);
     }
   }

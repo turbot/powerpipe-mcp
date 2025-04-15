@@ -39,7 +39,7 @@ function formatResult(variables: Variable[], cmd: string) {
 }
 
 export const tool: Tool = {
-  name: "variable_list",
+  name: "powerpipe_variable_list",
   description: "List all available Powerpipe variables",
   inputSchema: {
     type: "object",

@@ -2,62 +2,62 @@ import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolRequest, type Tool, type ServerResult } from "@modelcontextprotocol/sdk/types.js";
 
 // Most Frequently Used Operations
-import { tool as benchmarkListTool } from './benchmark_list.js';
-import { tool as benchmarkShowTool } from './benchmark_show.js';
-import { tool as benchmarkRunTool } from './benchmark_run.js';
-import { tool as controlListTool } from './control_list.js';
-import { tool as controlShowTool } from './control_show.js';
-import { tool as controlRunTool } from './control_run.js';
+import { tool as benchmarkListTool } from './powerpipe_benchmark_list.js';
+import { tool as benchmarkShowTool } from './powerpipe_benchmark_show.js';
+import { tool as benchmarkRunTool } from './powerpipe_benchmark_run.js';
+import { tool as controlListTool } from './powerpipe_control_list.js';
+import { tool as controlShowTool } from './powerpipe_control_show.js';
+import { tool as controlRunTool } from './powerpipe_control_run.js';
 
 // Secondary Operations
-import { tool as detectionListTool } from './detection_list.js';
-import { tool as detectionShowTool } from './detection_show.js';
-import { tool as detectionRunTool } from './detection_run.js';
-import { tool as queryListTool } from './query_list.js';
-import { tool as queryShowTool } from './query_show.js';
+import { tool as detectionListTool } from './powerpipe_detection_list.js';
+import { tool as detectionShowTool } from './powerpipe_detection_show.js';
+import { tool as detectionRunTool } from './powerpipe_detection_run.js';
+import { tool as queryListTool } from './powerpipe_query_list.js';
+import { tool as queryShowTool } from './powerpipe_query_show.js';
 
 // Configuration & Utilities
-import { tool as modLocationTool } from './mod_location.js';
-import { tool as variableListTool } from './variable_list.js';
-import { tool as variableShowTool } from './variable_show.js';
-import { tool as docsHclTool } from './docs_hcl.js';
+import { tool as modLocationTool } from './powerpipe_mod_location.js';
+import { tool as variableListTool } from './powerpipe_variable_list.js';
+import { tool as variableShowTool } from './powerpipe_variable_show.js';
+import { tool as docsHclTool } from './powerpipe_docs_hcl.js';
 
 // Powerpipe
-import { tool as dashboard_list } from "./dashboard_list.js";
-import { tool as dashboard_show } from "./dashboard_show.js";
-import { tool as dashboard_run } from "./dashboard_run.js";
+import { tool as dashboard_list } from "./powerpipe_dashboard_list.js";
+import { tool as dashboard_show } from "./powerpipe_dashboard_show.js";
+import { tool as dashboard_run } from "./powerpipe_dashboard_run.js";
 
 // Export all tools for server capabilities
 export const tools = {
   // Most Frequently Used Operations
-  benchmark_list: benchmarkListTool,    // Primary entry point for users finding benchmarks
-  benchmark_show: benchmarkShowTool,    // Detailed benchmark info
-  benchmark_run: benchmarkRunTool,      // Running benchmarks - core operation
+  powerpipe_benchmark_list: benchmarkListTool,    // Primary entry point for users finding benchmarks
+  powerpipe_benchmark_show: benchmarkShowTool,    // Detailed benchmark info
+  powerpipe_benchmark_run: benchmarkRunTool,      // Running benchmarks - core operation
 
-  control_list: controlListTool,        // Finding available controls
-  control_show: controlShowTool,        // Control details
-  control_run: controlRunTool,          // Running controls - core operation
+  powerpipe_control_list: controlListTool,        // Finding available controls
+  powerpipe_control_show: controlShowTool,        // Control details
+  powerpipe_control_run: controlRunTool,          // Running controls - core operation
 
   // Secondary Operations
-  detection_list: detectionListTool,    // Less commonly used than benchmarks/controls
-  detection_show: detectionShowTool,
-  detection_run: detectionRunTool,
+  powerpipe_detection_list: detectionListTool,    // Less commonly used than benchmarks/controls
+  powerpipe_detection_show: detectionShowTool,
+  powerpipe_detection_run: detectionRunTool,
 
-  query_list: queryListTool,           // More technical/advanced usage
-  query_show: queryShowTool,
+  powerpipe_query_list: queryListTool,           // More technical/advanced usage
+  powerpipe_query_show: queryShowTool,
 
   // Configuration & Utilities
-  mod_location: modLocationTool,       // Usually set once and rarely changed
-  variable_list: variableListTool,     // Supporting operations
-  variable_show: variableShowTool,
+  powerpipe_mod_location: modLocationTool,       // Usually set once and rarely changed
+  powerpipe_variable_list: variableListTool,     // Supporting operations
+  powerpipe_variable_show: variableShowTool,
 
   // Documentation
-  docs_hcl: docsHclTool,               // HCL documentation lookup
+  powerpipe_docs_hcl: docsHclTool,               // HCL documentation lookup
 
   // Powerpipe
-  dashboard_list,
-  dashboard_show,
-  dashboard_run
+  powerpipe_dashboard_list: dashboard_list,
+  powerpipe_dashboard_show: dashboard_show,
+  powerpipe_dashboard_run: dashboard_run
 };
 
 // Initialize tool handlers

@@ -39,7 +39,7 @@ function formatResult(queries: Query[], cmd: string) {
 }
 
 export const tool: Tool = {
-  name: "query_list",
+  name: "powerpipe_query_list",
   description: "List all available Powerpipe queries",
   inputSchema: {
     type: "object",
