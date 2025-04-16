@@ -50,7 +50,7 @@ Save the configuration file and restart your AI assistant for the changes to tak
 
 ## Prompting Guide
 
-First, run the `best_practices` prompt included in the MCP server to teach your LLM how best to work with Powerpipe. Then, ask anything!
+Here are some example questions you can ask to interact with your Powerpipe installation:
 
 Explore available compliance frameworks:
 ```
@@ -150,17 +150,7 @@ Remember to:
 
 ### Prompts
 
-- **best_practices**
-  - Best practices for working with Powerpipe
-  - Provides detailed guidance on:
-    - Working with benchmarks and controls
-    - Understanding compliance results
-    - Interpreting control failures
-    - Suggesting remediation steps
-    - Using mod locations effectively
-    - Managing variables and configuration
-    - Writing and organizing controls
-    - Performance considerations
+The Powerpipe MCP server includes a set of prompts that can be used to guide AI assistants in working with Powerpipe.
 
 ### Resources
 
