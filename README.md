@@ -116,11 +116,9 @@ This resource enables AI tools to check and verify the Powerpipe environment sta
 - [Powerpipe](https://powerpipe.io/downloads) installed and configured
 - A directory containing your Powerpipe mod files (required)
 
-### Claude Desktop
+### Configuration
 
-[How to use MCP servers with Claude Desktop →](https://modelcontextprotocol.io/quickstart/user)
-
-Add the following configuration to the "mcpServers" section of your `claude_desktop_config.json`:
+Add Powerpipe MCP to your AI assistant's configuration file:
 
 ```json
 {
@@ -139,30 +137,14 @@ Add the following configuration to the "mcpServers" section of your `claude_desk
 
 The mod location argument is required and must point to a directory containing your Powerpipe mod files. This is where Powerpipe will look for benchmarks, controls, and other resources.
 
-Save the configuration file and restart Claude Desktop for the changes to take effect.
+### AI Assistant Setup
 
-### Cursor
+| Assistant | Config File Location | Setup Guide |
+|-----------|---------------------|-------------|
+| Claude Desktop | `claude_desktop_config.json` | [Claude Desktop MCP Guide →](https://modelcontextprotocol.io/quickstart/user) |
+| Cursor | `~/.cursor/mcp.json` | [Cursor MCP Guide →](https://cursor.sh/docs/mcp) |
 
-Open your Cursor MCP configuration file at `~/.cursor/mcp.json` and add the following configuration to the "mcpServers" section:
-
-```json
-{
-  "mcpServers": {
-    "powerpipe": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@turbot/powerpipe-mcp",
-        "/path/to/your/mod/is/required"
-      ]
-    }
-  }
-}
-```
-
-The mod location argument is required and must point to a directory containing your Powerpipe mod files. This is where Powerpipe will look for benchmarks, controls, and other resources.
-
-Save the configuration file and restart Cursor for the changes to take effect.
+Save the configuration file and restart your AI assistant for the changes to take effect.
 
 ## Prompting Guide
 
@@ -205,9 +187,9 @@ Remember to:
 - Use natural language - the LLM will handle finding the right controls and benchmarks
 - Be bold and open, it's amazing what insights the LLM will discover!
 
-## Local Development
+## Development
 
-To set up the project for local development:
+### Clone and Setup
 
 1. Clone the repository and navigate to the directory:
 ```sh
@@ -225,63 +207,27 @@ npm install
 npm run build
 ```
 
-4. For development with auto-recompilation:
-```sh
-npm run watch
+### Testing
+
+To test your local development build with AI tools that support MCP, update your MCP configuration to use the local `dist/index.js` instead of the npm package. For example:
+
+```json
+{
+  "mcpServers": {
+    "powerpipe": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/powerpipe-mcp/dist/index.js",
+        "/path/to/your/mod/is/required"
+      ]
+    }
+  }
+}
 ```
 
-5. To run the server:
-```sh
-# Run with default mod location
-node dist/index.js
-
-# Run with custom mod location
-node dist/index.js /path/to/your/mod/is/required
-```
-
-6. To test:
-```sh
-npm test
-```
-
-## Environment Variables
-
-The following environment variables can be used to configure the Powerpipe MCP server:
-
-- `POWERPIPE_MCP_MOD_LOCATION`: Set the mod location for Powerpipe
-- `POWERPIPE_MCP_LOG_LEVEL`: Set the logging level (debug, info, warn, error)
-- `POWERPIPE_MCP_PORT`: Set the server port (default: 7891)
-
-## Development
-
-### Clone the Repository
-
+Or, use the MCP Inspector to validate the server implementation:
 ```bash
-git clone https://github.com/turbot/powerpipe-mcp.git
-cd powerpipe-mcp
-```
-
-### Install Dependencies
-
-```bash
-npm install
-```
-
-### Build
-
-```bash
-npm run build
-```
-
-### Run
-
-```bash
-node dist/index.js
-```
-
-With custom mod location:
-```bash
-node dist/index.js /path/to/your/mod/is/required
+npx @modelcontextprotocol/inspector dist/index.js
 ```
 
 ### Environment Variables
@@ -297,44 +243,9 @@ The following environment variables can be used to configure the MCP server:
   - TRACE
 - `POWERPIPE_MCP_MEMORY_MAX_MB`: Maximum memory buffer size in megabytes (default: 100)
 
-Example:
-```bash
-POWERPIPE_MCP_MOD_LOCATION=/path/to/mods POWERPIPE_MCP_LOG_LEVEL=DEBUG POWERPIPE_MCP_MEMORY_MAX_MB=200 node dist/index.js
-```
-
-Note: When using the Powerpipe CLI through the MCP server, the `POWERPIPE_MOD_LOCATION` environment variable is automatically set based on the MCP configuration.
-
-### Local Development with Cursor
-
-To use a local development version of the server with Cursor, update your `.mcpconfig.json` to use a local file path instead of the npm package:
-
-```json
-{
-  "powerpipe": {
-    "name": "Powerpipe",
-    "description": "Work with Powerpipe benchmarks and controls",
-    "command": "/absolute/path/to/dist/index.js"
-  }
-}
-```
-
-For example, if you cloned the repository to `~/src/powerpipe-mcp`, you would use `~/src/powerpipe-mcp/dist/index.js`.
-
-### Testing
-
-```bash
-npm test
-```
-
-### Validate MCP Implementation
-
-Use the MCP Inspector to validate the server implementation:
-
-```bash
-npx @modelcontextprotocol/inspector dist/index.js
-```
-
 ## License
+
+This repository is published under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0). Please see our [code of conduct](https://github.com/turbot/.github/blob/main/CODE_OF_CONDUCT.md). We look forward to collaborating with you!
 
 [Powerpipe](https://powerpipe.io) is a product produced from this open source software, exclusively by [Turbot HQ, Inc](https://turbot.com). It is distributed under our commercial terms. Others are allowed to make their own distribution of the software, there is no commercial exclusivity for the Powerpipe trademark or brand.
 
