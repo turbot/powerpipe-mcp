@@ -10,16 +10,84 @@ Powerpipe MCP bridges AI assistants and your compliance data, allowing natural l
 
 Works with your local [Powerpipe](https://powerpipe.io/downloads) installation, providing safe access to analyze your infrastructure against industry-standard security benchmarks and custom compliance frameworks.
 
-## Use Cases
+## Installation
 
-- Having AI assist with Powerpipe benchmark development
-- Enabling natural language interactions with your compliance data
-- Getting AI help analyzing compliance findings
-- Automating remediation suggestions
+### Prerequisites
 
-## Overview
+- [Node.js](https://nodejs.org/) v16 or higher (includes `npx`)
+- [Powerpipe](https://powerpipe.io/downloads) installed and configured
+- A directory containing your Powerpipe mod files (required)
 
-Connects directly to your Powerpipe installation, giving you AI access to your cloud security and compliance benchmarking data. Powerpipe helps you assess your cloud infrastructure against security benchmarks and compliance frameworks.
+### Configuration
+
+Add Powerpipe MCP to your AI assistant's configuration file:
+
+```json
+{
+  "mcpServers": {
+    "powerpipe": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@turbot/powerpipe-mcp",
+        "/path/to/your/mod/is/required"
+      ]
+    }
+  }
+}
+```
+
+The mod location argument is required and must point to a directory containing your Powerpipe mod files. This is where Powerpipe will look for benchmarks, controls, and other resources.
+
+### AI Assistant Setup
+
+| Assistant | Config File Location | Setup Guide |
+|-----------|---------------------|-------------|
+| Claude Desktop | `claude_desktop_config.json` | [Claude Desktop MCP Guide →](https://modelcontextprotocol.io/quickstart/user) |
+| Cursor | `~/.cursor/mcp.json` | [Cursor MCP Guide →](https://docs.cursor.com/context/model-context-protocol) |
+
+Save the configuration file and restart your AI assistant for the changes to take effect.
+
+## Prompting Guide
+
+First, run the `best_practices` prompt included in the MCP server to teach your LLM how best to work with Powerpipe. Then, ask anything!
+
+Explore available compliance frameworks:
+```
+What Powerpipe benchmarks do we have available?
+```
+
+Simple, specific questions work well:
+```
+Show me all controls related to S3 bucket encryption in the CIS AWS benchmark
+```
+
+Generate a compliance report:
+```
+What's our current compliance status for the NIST controls?
+```
+
+Dive into the details:
+```
+Find all failed controls in the AWS Security benchmark and explain why they failed
+```
+
+Get information about specific requirements:
+```
+Show me all controls related to password policies across our benchmarks
+```
+
+Explore with wide ranging questions:
+```
+Analyze our compliance gaps and suggest remediation steps
+```
+
+Remember to:
+- Be specific about which benchmarks or frameworks you're interested in
+- Mention the type of controls you want to analyze (encryption, access, networking, etc.)
+- Start with simple queries before adding complex conditions
+- Use natural language - the LLM will handle finding the right controls and benchmarks
+- Be bold and open, it's amazing what insights the LLM will discover!
 
 ## Capabilities
 
@@ -107,85 +175,6 @@ The Powerpipe MCP provides access to the following resources:
     - mod_location: Current working directory for mods
 
 This resource enables AI tools to check and verify the Powerpipe environment state.
-
-## Installation
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) v16 or higher (includes `npx`)
-- [Powerpipe](https://powerpipe.io/downloads) installed and configured
-- A directory containing your Powerpipe mod files (required)
-
-### Configuration
-
-Add Powerpipe MCP to your AI assistant's configuration file:
-
-```json
-{
-  "mcpServers": {
-    "powerpipe": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@turbot/powerpipe-mcp",
-        "/path/to/your/mod/is/required"
-      ]
-    }
-  }
-}
-```
-
-The mod location argument is required and must point to a directory containing your Powerpipe mod files. This is where Powerpipe will look for benchmarks, controls, and other resources.
-
-### AI Assistant Setup
-
-| Assistant | Config File Location | Setup Guide |
-|-----------|---------------------|-------------|
-| Claude Desktop | `claude_desktop_config.json` | [Claude Desktop MCP Guide →](https://modelcontextprotocol.io/quickstart/user) |
-| Cursor | `~/.cursor/mcp.json` | [Cursor MCP Guide →](https://cursor.sh/docs/mcp) |
-
-Save the configuration file and restart your AI assistant for the changes to take effect.
-
-## Prompting Guide
-
-First, run the `best_practices` prompt included in the MCP server to teach your LLM how best to work with Powerpipe. Then, ask anything!
-
-Explore available compliance frameworks:
-```
-What Powerpipe benchmarks do we have available?
-```
-
-Simple, specific questions work well:
-```
-Show me all controls related to S3 bucket encryption in the CIS AWS benchmark
-```
-
-Generate a compliance report:
-```
-What's our current compliance status for the NIST controls?
-```
-
-Dive into the details:
-```
-Find all failed controls in the AWS Security benchmark and explain why they failed
-```
-
-Get information about specific requirements:
-```
-Show me all controls related to password policies across our benchmarks
-```
-
-Explore with wide ranging questions:
-```
-Analyze our compliance gaps and suggest remediation steps
-```
-
-Remember to:
-- Be specific about which benchmarks or frameworks you're interested in
-- Mention the type of controls you want to analyze (encryption, access, networking, etc.)
-- Start with simple queries before adding complex conditions
-- Use natural language - the LLM will handle finding the right controls and benchmarks
-- Be bold and open, it's amazing what insights the LLM will discover!
 
 ## Development
 
