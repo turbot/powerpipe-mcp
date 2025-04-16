@@ -1,11 +1,14 @@
 # Powerpipe Model Context Protocol (MCP) Server
 
-Enable AI assistants like Claude to explore and work with your Powerpipe benchmarks and controls! This Model Context Protocol (MCP) server lets AI tools:
+Unlock the power of AI-driven security and compliance analysis with [Powerpipe](https://powerpipe.io)! This Model Context Protocol server seamlessly connects AI assistants like Claude to your infrastructure compliance data, enabling natural language exploration and analysis of your cloud security posture.
 
-- Browse your Powerpipe benchmarks and controls
-- Understand compliance status
-- Help analyze and remediate findings
-- Assist with benchmark development
+Powerpipe MCP bridges AI assistants and your compliance data, allowing natural language:
+- Exploration of security benchmarks and compliance frameworks
+- Analysis of compliance status and findings
+- Development and customization of controls
+- Remediation guidance for failed checks
+
+Works with your local [Powerpipe](https://powerpipe.io/downloads) installation, providing safe access to analyze your infrastructure against industry-standard security benchmarks and custom compliance frameworks.
 
 ## Use Cases
 
@@ -167,7 +170,7 @@ First, run the `best_practices` prompt included in the MCP server to teach your 
 
 Explore available compliance frameworks:
 ```
-What benchmarks do we have available in Powerpipe?
+What Powerpipe benchmarks do we have available?
 ```
 
 Simple, specific questions work well:
