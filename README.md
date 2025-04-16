@@ -89,6 +89,10 @@ Remember to:
 - Use natural language - the LLM will handle finding the right controls and benchmarks
 - Be bold and open, it's amazing what insights the LLM will discover!
 
+### Prompts
+
+The Powerpipe MCP server includes a set of prompts that can be used to guide AI assistants in working with Powerpipe.
+
 ## Capabilities
 
 ### Tools
@@ -147,10 +151,6 @@ Remember to:
   - Access detailed HCL documentation and examples
   - Understand syntax for all Powerpipe elements
   - Get guidance for writing and modifying mod files
-
-### Prompts
-
-The Powerpipe MCP server includes a set of prompts that can be used to guide AI assistants in working with Powerpipe.
 
 ### Resources
 
