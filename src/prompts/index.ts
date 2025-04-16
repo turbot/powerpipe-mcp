@@ -1,26 +1,50 @@
-import { ListPromptsRequestSchema, GetPromptRequestSchema, type Prompt, GetPromptResult } from "@modelcontextprotocol/sdk/types.js";
+import { ListPromptsRequestSchema, GetPromptRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { logger } from '../services/logger.js';
+import type { Prompt } from "../types/prompt.js";
 
-// Export all prompts for server capabilities
-export const prompts: Record<string, Prompt> = {};
+// Register all available prompts
+const prompts: Prompt[] = [];
 
-export function setupPrompts(server: Server) {
+// Export prompts for server capabilities
+export const promptCapabilities = {
+  prompts: Object.fromEntries(
+    prompts.map(p => [p.name, {
+      name: p.name,
+      description: p.description
+    }])
+  )
+};
+
+export function setupPromptHandlers(server: Server) {
   // Register prompt list handler
   server.setRequestHandler(ListPromptsRequestSchema, async () => {
-    return {
-      prompts: Object.values(prompts),
-    };
+    try {
+      return { prompts: Object.values(promptCapabilities.prompts) };
+    } catch (error) {
+      // Log the error but don't fail - return default prompts
+      if (error instanceof Error) {
+        logger.error("Critical error listing prompts:", error.message);
+      } else {
+        logger.error("Critical error listing prompts:", error);
+      }
+      
+      // Return empty list on error
+      return { prompts: [] };
+    }
   });
 
   // Register prompt get handler
   server.setRequestHandler(GetPromptRequestSchema, async (request) => {
     const { name } = request.params;
-    const prompt = prompts[name as keyof typeof prompts];
 
+    // Find matching prompt
+    const prompt = prompts.find(p => p.name === name);
     if (!prompt) {
       throw new Error(`Unknown prompt: ${name}`);
     }
 
+    // Handle the prompt request
     return prompt.handler();
   });
 } 

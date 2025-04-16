@@ -4,4 +4,4 @@ export interface Prompt {
   name: string;
   description: string;
   handler: () => Promise<GetPromptResult>;
-} 
+}
