@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/turbot-powerpipe-mcp-badge.png)](https://mseep.ai/app/turbot-powerpipe-mcp)
+
 # Powerpipe Model Context Protocol (MCP) Server
 
 Unlock the power of AI-driven security and compliance analysis with [Powerpipe](https://powerpipe.io)! This Model Context Protocol server seamlessly connects AI assistants like Claude to your infrastructure compliance data, enabling natural language exploration and analysis of your cloud security posture.
